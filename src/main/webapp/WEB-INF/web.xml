@@ -1,0 +1,26 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <servlet>
+    <servlet-name>user</servlet-name>
+    <servlet-class>org.aston.task.servlet.UserServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>record</servlet-name>
+    <servlet-class>org.aston.task.servlet.RecordServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>user</servlet-name>
+    <url-pattern>/user</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>record</servlet-name>
+    <url-pattern>/record</url-pattern>
+  </servlet-mapping>
+
+</web-app>
