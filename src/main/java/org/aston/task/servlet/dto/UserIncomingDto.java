@@ -2,21 +2,14 @@ package org.aston.task.servlet.dto;
 
 public class UserIncomingDto {
 
-    private String id;
-
     private String userName;
 
-    public UserIncomingDto(String id, String userName) {
-        this.id = id;
+    public UserIncomingDto() {
+
+    }
+
+    public UserIncomingDto(String userName) {
         this.userName = userName;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUserName() {

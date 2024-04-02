@@ -23,4 +23,14 @@
     <url-pattern>/record</url-pattern>
   </servlet-mapping>
 
+  <error-page>
+    <exception-type>org.aston.task.exceptions.BadRequestException</exception-type>
+    <location>/AppExceptionHandler</location>
+  </error-page>
+
+  <error-page>
+    <exception-type>org.aston.task.exceptions.NotFoundException</exception-type>
+    <location>/AppExceptionHandler</location>
+  </error-page>
+
 </web-app>

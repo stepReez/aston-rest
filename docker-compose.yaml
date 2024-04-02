@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./src/main/resources/db/schema.sql/:/docker-entrypoint-initdb.d/schema.sql
+      - /var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=aston
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+
+
+  service:
+    image: tomcat
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target:/usr/local/tomcat/webapps
+    depends_on:
+      - db

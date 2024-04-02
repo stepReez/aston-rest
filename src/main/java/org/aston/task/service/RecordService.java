@@ -16,7 +16,5 @@ public interface RecordService {
 
     boolean deleteRecord(UUID id);
 
-    void addLike(RecordEntity recordEntity, UserEntity user);
-
     List<RecordEntity> findAll();
 }

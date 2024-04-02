@@ -1,6 +1,7 @@
 package org.aston.task.servlet.dto;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RecordOutcomingDto {
     private String id;
@@ -9,11 +10,15 @@ public class RecordOutcomingDto {
 
     private String text;
 
-    private List<Integer> likes;
+    private List<String> likes;
 
-    private int authorId;
+    private String authorId;
 
-    public RecordOutcomingDto(String id, String title, String text, List<Integer> likes, int authorId) {
+    public RecordOutcomingDto() {
+
+    }
+
+    public RecordOutcomingDto(String id, String title, String text, List<String> likes, String authorId) {
         this.id = id;
         this.title = title;
         this.text = text;
@@ -45,19 +50,19 @@ public class RecordOutcomingDto {
         this.text = text;
     }
 
-    public List<Integer> getLikes() {
+    public List<String> getLikes() {
         return likes;
     }
 
-    public void setLikes(List<Integer> likes) {
+    public void setLikes(List<String> likes) {
         this.likes = likes;
     }
 
-    public int getAuthorId() {
+    public String getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(String authorId) {
         this.authorId = authorId;
     }
 }
