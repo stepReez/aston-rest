@@ -3,7 +3,6 @@ package org.aston.task.repository.impl;
 import org.aston.task.db.ConnectionManager;
 import org.aston.task.db.ConnectionManagerImpl;
 import org.aston.task.exceptions.NotFoundException;
-import org.aston.task.model.RecordEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.repository.UserEntityRepository;
 import org.aston.task.repository.mapper.UserResultSetMapper;
@@ -84,7 +83,7 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES (?, ?)")) {
             preparedStatement.setString(1, user.getId().toString());
-            preparedStatement.setString(2, user.getUserName());
+            preparedStatement.setString(2, user.getName());
             preparedStatement.execute();
             return findById(user.getId());
 
@@ -98,7 +97,7 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET user_name = ? " +
                      "WHERE user_id = ?")) {
-            preparedStatement.setString(1, user.getUserName());
+            preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, uuid.toString());
             preparedStatement.execute();
             return findById(uuid);

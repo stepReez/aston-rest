@@ -43,8 +43,9 @@ public class RecordServiceImpl implements RecordService {
     public RecordEntity createRecord(RecordEntity recordEntity, UUID userId) {
         recordEntity.setId(UUID.randomUUID());
         recordEntity.setAuthor(userEntityRepository.findById(userId));
-        recordEntity.setLikes(new ArrayList<>());
-        return recordEntityRepository.save(recordEntity);
+        RecordEntity record = recordEntityRepository.save(recordEntity);
+        record.setLikes(new ArrayList<>());
+        return record;
     }
 
     @Override

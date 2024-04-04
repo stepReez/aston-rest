@@ -6,7 +6,7 @@ import java.util.UUID;
 public class UserEntity {
     private UUID id;
 
-    private String userName;
+    private String name;
 
     private List<RecordEntity> records;
 
@@ -20,12 +20,12 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<RecordEntity> getRecords() {

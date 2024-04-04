@@ -51,7 +51,7 @@ public class UserServlet extends HttpServlet {
         resp.setContentType("text/html");
         String query = req.getQueryString();
         PrintWriter printWriter = resp.getWriter();
-        if (query != null && Pattern.matches("^id=.+$", query)) {
+        if (query != null && req.getParameter("id") != null) {
             UUID id = UUID.fromString(req.getParameter("id"));
             UserEntity userEntity = userService.findUserById(id);
             UserOutcomingDto userOutcomingDto = userDtoMapper.outComingUserMap(userEntity);
@@ -79,9 +79,10 @@ public class UserServlet extends HttpServlet {
         String userString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
         UserIncomingDto userIncomingDto = gson.fromJson(userString, UserIncomingDto.class);
-        UserEntity userEntity = userService.createUser(userDtoMapper.incomingUserMap(userIncomingDto));
+        UserEntity userEntity = userDtoMapper.incomingUserMap(userIncomingDto);
+        UserEntity outComingUser = userService.createUser(userEntity);
 
-        UserOutcomingDto userOutcomingDto = userDtoMapper.outComingUserMap(userEntity);
+        UserOutcomingDto userOutcomingDto = userDtoMapper.outComingUserMap(outComingUser);
         JsonElement jsonUser = gson.toJsonTree(userOutcomingDto);
         String userOutString = gson.toJson(jsonUser);
 
@@ -94,7 +95,7 @@ public class UserServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         String query = req.getQueryString();
-        if (query != null && Pattern.matches("^id=.+$", query)) {
+        if (query != null && req.getParameter("id") != null) {
             String userString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             UUID id = UUID.fromString(req.getParameter("id"));
 
@@ -117,7 +118,7 @@ public class UserServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         String query = req.getQueryString();
-        if (query != null && Pattern.matches("^id=.+$", query)) {
+        if (query != null && req.getParameter("id") != null) {
             UUID id = UUID.fromString(req.getParameter("id"));
             userService.deleteUser(id);
         } else {

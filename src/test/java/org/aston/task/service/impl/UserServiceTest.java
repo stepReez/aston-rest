@@ -30,7 +30,7 @@ class UserServiceTest {
         UserEntity userEntity = new UserEntity();
         String name = "Name";
 
-        userEntity.setUserName(name);
+        userEntity.setName(name);
 
         UserEntityRepository userEntityRepositoryMock = Mockito.mock(UserEntityRepositoryImpl.class);
         userService.setUserEntityRepository(userEntityRepositoryMock);
@@ -41,7 +41,7 @@ class UserServiceTest {
 
         UserEntity outComeUser = userService.createUser(userEntity);
 
-        Assertions.assertEquals(name, outComeUser.getUserName(), "Name must be equal " + name);
+        Assertions.assertEquals(name, outComeUser.getName(), "Name must be equal " + name);
         Assertions.assertNotNull(outComeUser.getId(), "Id must be not null");
         Assertions.assertNotNull(outComeUser.getLikes(), "Likes must be not null");
         Assertions.assertNotNull(outComeUser.getRecords(), "Records must be not null");
@@ -63,7 +63,7 @@ class UserServiceTest {
         String name = "Name";
 
         userEntity.setId(id);
-        userEntity.setUserName(name);
+        userEntity.setName(name);
 
         Mockito
                 .when(userEntityRepositoryMock.findById(id))
@@ -80,7 +80,7 @@ class UserServiceTest {
         UserEntity outComingUser = userService.findUserById(id);
 
         Assertions.assertEquals(id, outComingUser.getId(), "Id must be equal " + id);
-        Assertions.assertEquals(name, outComingUser.getUserName(), "Name must be equal " + name);
+        Assertions.assertEquals(name, outComingUser.getName(), "Name must be equal " + name);
         Assertions.assertNotNull(outComingUser.getLikes(), "Likes must be not null");
         Assertions.assertNotNull(outComingUser.getRecords(), "Records must be not null");
     }
@@ -101,7 +101,7 @@ class UserServiceTest {
         String name = "Name";
 
         userEntity.setId(id);
-        userEntity.setUserName(name);
+        userEntity.setName(name);
 
         Mockito
                 .when(userEntityRepositoryMock.update(userEntity, id))
@@ -118,7 +118,7 @@ class UserServiceTest {
         UserEntity outComingUser = userService.updateUser(userEntity, id);
 
         Assertions.assertEquals(id, outComingUser.getId(), "Id must be equal " + id);
-        Assertions.assertEquals(name, outComingUser.getUserName(), "Name must be equal " + name);
+        Assertions.assertEquals(name, outComingUser.getName(), "Name must be equal " + name);
         Assertions.assertNotNull(outComingUser.getLikes(), "Likes must be not null");
         Assertions.assertNotNull(outComingUser.getRecords(), "Records must be not null");
     }
@@ -155,14 +155,14 @@ class UserServiceTest {
         String name1 = "Name1";
 
         userEntity1.setId(id1);
-        userEntity1.setUserName(name1);
+        userEntity1.setName(name1);
 
         UserEntity userEntity2 = new UserEntity();
         UUID id2 = UUID.randomUUID();
         String name2 = "Name2";
 
         userEntity2.setId(id2);
-        userEntity2.setUserName(name2);
+        userEntity2.setName(name2);
 
         List<UserEntity> userEntities = new ArrayList<>();
         userEntities.add(userEntity1);

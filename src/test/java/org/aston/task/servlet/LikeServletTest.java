@@ -145,7 +145,7 @@ class LikeServletTest {
     }
 
     @Test
-    void doPutUserBadRequestTest() {
+    void doPostUserBadRequestTest() {
 
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
@@ -154,7 +154,7 @@ class LikeServletTest {
                 .when(req.getQueryString())
                 .thenReturn("not=" + "name");
 
-        Assertions.assertThrows(BadRequestException.class, () -> likeServlet.doPut(req, resp));
+        Assertions.assertThrows(BadRequestException.class, () -> likeServlet.doPost(req, resp));
     }
 
     @Test

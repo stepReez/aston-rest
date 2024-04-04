@@ -9,6 +9,7 @@ import org.aston.task.repository.RecordEntityRepository;
 import org.aston.task.repository.mapper.RecordResultSetMapper;
 import org.aston.task.repository.mapper.impl.RecordResultSetMapperImpl;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,7 +45,6 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
             }
             return record;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -58,7 +58,6 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
             return preparedStatement.execute();
 
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -92,7 +91,6 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
             return findById(recordEntity.getId());
 
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }

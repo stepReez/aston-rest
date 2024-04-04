@@ -139,7 +139,7 @@ class UserServletTest {
         UUID id = UUID.randomUUID();
         String name = "name";
         user.setId(id);
-        user.setUserName(name);
+        user.setName(name);
 
         Mockito
                 .when(userService.updateUser(user, id))
@@ -147,14 +147,14 @@ class UserServletTest {
 
         UserOutcomingDto userOutcomingDto = new UserOutcomingDto();
         userOutcomingDto.setId(id.toString());
-        userOutcomingDto.setUserName(name);
+        userOutcomingDto.setName(name);
 
         Mockito
                 .when(userDtoMapper.outComingUserMap(Mockito.any()))
                 .thenReturn(userOutcomingDto);
 
         UserIncomingDto userIncomingDto = new UserIncomingDto();
-        userIncomingDto.setUserName(name);
+        userIncomingDto.setName(name);
 
         Mockito
                 .when(userDtoMapper.incomingUserMap(userIncomingDto))
@@ -207,7 +207,7 @@ class UserServletTest {
         UUID id = UUID.randomUUID();
         String name = "name";
         user.setId(id);
-        user.setUserName(name);
+        user.setName(name);
 
         Mockito
                 .when(userService.updateUser(user, id))
@@ -215,14 +215,14 @@ class UserServletTest {
 
         UserOutcomingDto userOutcomingDto = new UserOutcomingDto();
         userOutcomingDto.setId(id.toString());
-        userOutcomingDto.setUserName(name);
+        userOutcomingDto.setName(name);
 
         Mockito
                 .when(userDtoMapper.outComingUserMap(Mockito.any()))
                 .thenReturn(userOutcomingDto);
 
         UserIncomingDto userIncomingDto = new UserIncomingDto();
-        userIncomingDto.setUserName(name);
+        userIncomingDto.setName(name);
 
         Mockito
                 .when(userDtoMapper.incomingUserMap(userIncomingDto))

@@ -39,7 +39,7 @@ class RecordServiceTest {
         String name = "Name";
 
         userEntity.setId(userId);
-        userEntity.setUserName(name);
+        userEntity.setName(name);
 
         RecordEntityRepositoryImpl recordEntityRepository = Mockito.mock(RecordEntityRepositoryImpl.class);
         recordService.setRecordEntityRepository(recordEntityRepository);

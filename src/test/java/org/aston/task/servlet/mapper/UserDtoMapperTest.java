@@ -26,10 +26,10 @@ class UserDtoMapperTest {
     void userDtoMapper_incomingUserMapTest() {
         UserIncomingDto userIncomingDto = new UserIncomingDto();
         String userName = "user";
-        userIncomingDto.setUserName(userName);
+        userIncomingDto.setName(userName);
         UserEntity user = userDtoMapper.incomingUserMap(userIncomingDto);
 
-        Assertions.assertEquals(userName, user.getUserName(), "Username must be equal " + userName);
+        Assertions.assertEquals(userName, user.getName(), "Username must be equal " + userName);
     }
 
     @Test
@@ -38,7 +38,7 @@ class UserDtoMapperTest {
         UUID userId = UUID.randomUUID();
         userEntity.setId(userId);
         String userName = "user";
-        userEntity.setUserName(userName);
+        userEntity.setName(userName);
 
         RecordEntity recordEntity1 = new RecordEntity();
         UUID recordId1 = UUID.randomUUID();
@@ -59,7 +59,7 @@ class UserDtoMapperTest {
 
         UserOutcomingDto userOutcomingDto = userDtoMapper.outComingUserMap(userEntity);
         Assertions.assertEquals(userId.toString(), userOutcomingDto.getId(), "Id must be equal " + userId);
-        Assertions.assertEquals(userName, userOutcomingDto.getUserName(), "Username must be equal " + userName);
+        Assertions.assertEquals(userName, userOutcomingDto.getName(), "Username must be equal " + userName);
         Assertions.assertEquals(1, userOutcomingDto.getRecordsId().size(), "Size must be equal " + 1);
         Assertions.assertEquals(recordId1.toString(), userOutcomingDto.getRecordsId().get(0),
                 "Id must bew equal " + recordId1);

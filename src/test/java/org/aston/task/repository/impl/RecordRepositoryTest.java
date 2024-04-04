@@ -50,7 +50,7 @@ public class RecordRepositoryTest {
         name = "name";
 
         user.setId(userId);
-        user.setUserName(name);
+        user.setName(name);
 
         record = new RecordEntity();
 

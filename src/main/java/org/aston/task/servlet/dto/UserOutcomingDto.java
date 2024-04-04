@@ -6,7 +6,7 @@ public class UserOutcomingDto {
 
     private String id;
 
-    private String userName;
+    private String name;
 
     private List<String> recordsId;
 
@@ -16,9 +16,9 @@ public class UserOutcomingDto {
 
     }
 
-    public UserOutcomingDto(String id, String userName, List<String> recordsId, List<String> likes) {
+    public UserOutcomingDto(String id, String name, List<String> recordsId, List<String> likes) {
         this.id = id;
-        this.userName = userName;
+        this.name = name;
         this.recordsId = recordsId;
         this.likes = likes;
     }
@@ -31,12 +31,12 @@ public class UserOutcomingDto {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<String> getRecordsId() {

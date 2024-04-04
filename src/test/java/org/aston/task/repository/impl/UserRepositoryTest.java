@@ -39,7 +39,7 @@ public class UserRepositoryTest {
         name = "name";
 
         user.setId(userId);
-        user.setUserName(name);
+        user.setName(name);
 
         container.start();
         userEntityRepository = new UserEntityRepositoryImpl();
@@ -70,7 +70,7 @@ public class UserRepositoryTest {
         UserEntity userEntity = userEntityRepository.save(user);
 
         Assertions.assertEquals(userId, userEntity.getId());
-        Assertions.assertEquals(name, userEntity.getUserName());
+        Assertions.assertEquals(name, userEntity.getName());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class UserRepositoryTest {
         UserEntity userEntity = userEntityRepository.save(user);
 
         Assertions.assertEquals(userId, userEntity.getId());
-        Assertions.assertEquals(name, userEntity.getUserName());
+        Assertions.assertEquals(name, userEntity.getName());
 
         userEntityRepository.deleteById(userId);
 
@@ -93,12 +93,12 @@ public class UserRepositoryTest {
 
         UserEntity userEntity = new UserEntity();
         String newName = "New name";
-        userEntity.setUserName(newName);
+        userEntity.setName(newName);
 
         UserEntity userEntity1 = userEntityRepository.update(userEntity, userId);
 
         Assertions.assertEquals(userId, userEntity1.getId());
-        Assertions.assertEquals(newName, userEntity1.getUserName());
+        Assertions.assertEquals(newName, userEntity1.getName());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class UserRepositoryTest {
         UUID newId = UUID.randomUUID();
         String newName = "New name";
         userEntity.setId(newId);
-        userEntity.setUserName(newName);
+        userEntity.setName(newName);
 
         userEntityRepository.save(userEntity);
 

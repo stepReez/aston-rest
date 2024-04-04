@@ -14,7 +14,9 @@ import org.aston.task.model.UserEntity;
 import org.aston.task.service.LikeService;
 import org.aston.task.service.impl.LikeServiceImpl;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
+import org.aston.task.servlet.dto.RecordOutcomingShortDto;
 import org.aston.task.servlet.dto.UserOutcomingDto;
+import org.aston.task.servlet.dto.UserOutcomingShortDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
 import org.aston.task.servlet.mapper.UserDtoMapper;
 import org.aston.task.servlet.mapper.impl.RecordDtoMapperImpl;
@@ -61,18 +63,20 @@ public class LikeServlet extends HttpServlet {
         resp.setContentType("text/html");
         String query = req.getQueryString();
         PrintWriter printWriter = resp.getWriter();
-        if (query != null && Pattern.matches("^userId=.+$", query)) {
+        if (query != null && req.getParameter("userId") != null) {
             UUID id = UUID.fromString(req.getParameter("userId"));
             List<RecordEntity> recordEntities = likeService.getLikesByUser(id);
-            List<RecordOutcomingDto> records = recordEntities.stream().map(recordDtoMapper::outComingRecordMap).toList();
+            List<RecordOutcomingShortDto> records = recordEntities
+                    .stream().map(recordDtoMapper::outComingShortRecordMap).toList();
             JsonElement jsonRecord = gson.toJsonTree(records);
             String recordString = gson.toJson(jsonRecord);
             printWriter.write(recordString);
 
-        } else if (query != null && Pattern.matches("^recordId=.+$", query)) {
+        } else if (query != null && req.getParameter("recordId") != null) {
             UUID id = UUID.fromString(req.getParameter("recordId"));
             List<UserEntity> userEntities = likeService.getLikesByRecord(id);
-            List<UserOutcomingDto> users = userEntities.stream().map(userDtoMapper::outComingUserMap).toList();
+            List<UserOutcomingShortDto> users = userEntities
+                    .stream().map(userDtoMapper::outComingShortUserMap).toList();
             JsonElement jsonUsers = gson.toJsonTree(users);
             String usersString = gson.toJson(jsonUsers);
             printWriter.write(usersString);
@@ -83,11 +87,11 @@ public class LikeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         String query = req.getQueryString();
 
-        if (query != null && Pattern.matches("^recordId=.+&userId=.+$", query)) {
+        if (query != null && req.getParameter("userId") != null && req.getParameter("recordId") != null) {
             UUID recordId = UUID.fromString(req.getParameter("recordId"));
             UUID userId = UUID.fromString(req.getParameter("userId"));
             likeService.addLike(recordId, userId);
@@ -101,7 +105,7 @@ public class LikeServlet extends HttpServlet {
         resp.setContentType("text/html");
         String query = req.getQueryString();
 
-        if (query != null && Pattern.matches("^recordId=.+&userId=.+$", query)) {
+        if (query != null && req.getParameter("userId") != null && req.getParameter("recordId") != null) {
             UUID recordId = UUID.fromString(req.getParameter("recordId"));
             UUID userId = UUID.fromString(req.getParameter("userId"));
             likeService.removeLike(recordId, userId);

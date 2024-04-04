@@ -4,7 +4,6 @@ import org.aston.task.model.RecordEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.impl.LikeRepositoryImpl;
-import org.aston.task.service.LikeService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,7 +71,7 @@ class LikeServiceTest {
             String name = "name";
 
             user.setId(uuid);
-            user.setUserName(name);
+            user.setName(name);
 
             userEntities.add(user);
         }

@@ -55,7 +55,7 @@ public class RecordServlet extends HttpServlet {
         resp.setContentType("text/html");
         String query = req.getQueryString();
         PrintWriter printWriter = resp.getWriter();
-        if (query != null && Pattern.matches("^id=.+$", query)) {
+        if (query != null && req.getParameter("id") != null) {
             UUID id = UUID.fromString(req.getParameter("id"));
             RecordEntity recordEntity = recordService.findRecordById(id);
             RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(recordEntity);
@@ -82,7 +82,7 @@ public class RecordServlet extends HttpServlet {
         resp.setContentType("text/html");
         String query = req.getQueryString();
 
-        if (query != null && Pattern.matches("^userId=.+$", query)) {
+        if (query != null && req.getParameter("userId") != null) {
             String recordString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             UUID id = UUID.fromString(req.getParameter("userId"));
             RecordIncomingDto recordIncomingDto = gson.fromJson(recordString, RecordIncomingDto.class);
@@ -105,7 +105,7 @@ public class RecordServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         String query = req.getQueryString();
-        if (query != null && Pattern.matches("^id=.+$", query)) {
+        if (query != null && req.getParameter("id") != null) {
             String recordString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             UUID id = UUID.fromString(req.getParameter("id"));
 
@@ -128,7 +128,7 @@ public class RecordServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         String query = req.getQueryString();
-        if (query != null && Pattern.matches("^id=.+$", query)) {
+        if (query != null && req.getParameter("id") != null) {
             UUID id = UUID.fromString(req.getParameter("id"));
             recordService.deleteRecord(id);
         } else {

@@ -71,7 +71,7 @@ public class LikeRepositoryTest {
         String name = "name";
 
         user.setId(userId);
-        user.setUserName(name);
+        user.setName(name);
 
         RecordEntity record = new RecordEntity();
 
@@ -107,7 +107,7 @@ public class LikeRepositoryTest {
         String name = "name";
 
         user.setId(userId);
-        user.setUserName(name);
+        user.setName(name);
 
         RecordEntity record = new RecordEntity();
 
@@ -130,7 +130,7 @@ public class LikeRepositoryTest {
 
         Assertions.assertEquals(1, userEntities.size());
         Assertions.assertEquals(userId, userEntities.get(0).getId());
-        Assertions.assertEquals(name, userEntities.get(0).getUserName());
+        Assertions.assertEquals(name, userEntities.get(0).getName());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class LikeRepositoryTest {
         String name = "name";
 
         user.setId(userId);
-        user.setUserName(name);
+        user.setName(name);
 
         RecordEntity record = new RecordEntity();
 

@@ -11,6 +11,7 @@ import org.aston.task.repository.mapper.UserResultSetMapper;
 import org.aston.task.repository.mapper.impl.RecordResultSetMapperImpl;
 import org.aston.task.repository.mapper.impl.UserResultSetMapperImpl;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
