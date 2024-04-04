@@ -6,7 +6,6 @@ import org.aston.task.repository.mapper.RecordResultSetMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class RecordResultSetMapperImpl implements RecordResultSetMapper {

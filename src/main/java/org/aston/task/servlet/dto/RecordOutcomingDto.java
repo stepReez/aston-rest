@@ -1,7 +1,6 @@
 package org.aston.task.servlet.dto;
 
 import java.util.List;
-import java.util.UUID;
 
 public class RecordOutcomingDto {
     private String id;

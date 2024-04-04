@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "user", value = "/user")

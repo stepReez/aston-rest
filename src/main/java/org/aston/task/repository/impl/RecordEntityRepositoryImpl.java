@@ -4,12 +4,10 @@ import org.aston.task.db.ConnectionManager;
 import org.aston.task.db.ConnectionManagerImpl;
 import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.RecordEntity;
-import org.aston.task.model.UserEntity;
 import org.aston.task.repository.RecordEntityRepository;
 import org.aston.task.repository.mapper.RecordResultSetMapper;
 import org.aston.task.repository.mapper.impl.RecordResultSetMapperImpl;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

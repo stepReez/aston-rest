@@ -9,14 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aston.task.exceptions.BadRequestException;
 import org.aston.task.model.RecordEntity;
-import org.aston.task.model.UserEntity;
 import org.aston.task.service.RecordService;
-import org.aston.task.service.UserService;
 import org.aston.task.service.impl.RecordServiceImpl;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
-import org.aston.task.servlet.dto.UserIncomingDto;
-import org.aston.task.servlet.dto.UserOutcomingDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
 import org.aston.task.servlet.mapper.impl.RecordDtoMapperImpl;
 
@@ -24,7 +20,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "record", value = "/record")

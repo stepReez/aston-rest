@@ -8,14 +8,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aston.task.exceptions.BadRequestException;
-import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.RecordEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.service.LikeService;
 import org.aston.task.service.impl.LikeServiceImpl;
-import org.aston.task.servlet.dto.RecordOutcomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingShortDto;
-import org.aston.task.servlet.dto.UserOutcomingDto;
 import org.aston.task.servlet.dto.UserOutcomingShortDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
 import org.aston.task.servlet.mapper.UserDtoMapper;
@@ -26,7 +23,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 @WebServlet(name = "likes", value = "/record/likes")
 public class LikeServlet extends HttpServlet {
