@@ -15,16 +15,28 @@ import java.util.UUID;
 
 public class RecordServiceImpl implements RecordService {
 
-    private final RecordEntityRepository recordEntityRepository;
+    private RecordEntityRepository recordEntityRepository;
 
-    private final UserEntityRepository userEntityRepository;
+    private UserEntityRepository userEntityRepository;
 
-    private final LikeRepository likeRepository;
+    private LikeRepository likeRepository;
 
     public RecordServiceImpl() {
         recordEntityRepository = new RecordEntityRepositoryImpl();
         userEntityRepository = new UserEntityRepositoryImpl();
         likeRepository = new LikeRepositoryImpl();
+    }
+
+    public void setRecordEntityRepository(RecordEntityRepository recordEntityRepository) {
+        this.recordEntityRepository = recordEntityRepository;
+    }
+
+    public void setUserEntityRepository(UserEntityRepository userEntityRepository) {
+        this.userEntityRepository = userEntityRepository;
+    }
+
+    public void setLikeRepository(LikeRepository likeRepository) {
+        this.likeRepository = likeRepository;
     }
 
     @Override

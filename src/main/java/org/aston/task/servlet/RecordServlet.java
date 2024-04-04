@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
 @WebServlet(name = "record", value = "/record")
 public class RecordServlet extends HttpServlet {
 
-    private final RecordService recordService;
+    private RecordService recordService;
 
-    private final RecordDtoMapper recordDtoMapper;
+    private RecordDtoMapper recordDtoMapper;
 
     private final Gson gson;
 
@@ -40,6 +40,14 @@ public class RecordServlet extends HttpServlet {
         recordService = new RecordServiceImpl();
         recordDtoMapper = new RecordDtoMapperImpl();
         gson = new Gson();
+    }
+
+    public void setRecordService(RecordService recordService) {
+        this.recordService = recordService;
+    }
+
+    public void setRecordDtoMapper(RecordDtoMapper recordDtoMapper) {
+        this.recordDtoMapper = recordDtoMapper;
     }
 
     @Override
@@ -96,9 +104,9 @@ public class RecordServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
-        String recordString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         String query = req.getQueryString();
         if (query != null && Pattern.matches("^id=.+$", query)) {
+            String recordString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             UUID id = UUID.fromString(req.getParameter("id"));
 
             RecordIncomingDto recordIncomingDto = gson.fromJson(recordString, RecordIncomingDto.class);

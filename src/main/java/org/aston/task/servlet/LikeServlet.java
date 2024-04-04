@@ -29,11 +29,11 @@ import java.util.regex.Pattern;
 @WebServlet(name = "likes", value = "/record/likes")
 public class LikeServlet extends HttpServlet {
     
-    private final LikeService likeService;
+    private LikeService likeService;
 
-    private final RecordDtoMapper recordDtoMapper;
+    private RecordDtoMapper recordDtoMapper;
 
-    private final UserDtoMapper userDtoMapper;
+    private UserDtoMapper userDtoMapper;
 
     private final Gson gson;
 
@@ -43,7 +43,19 @@ public class LikeServlet extends HttpServlet {
         userDtoMapper = new UserDtoMapperImpl();
         gson = new Gson();
     }
-    
+
+    public void setLikeService(LikeService likeService) {
+        this.likeService = likeService;
+    }
+
+    public void setRecordDtoMapper(RecordDtoMapper recordDtoMapper) {
+        this.recordDtoMapper = recordDtoMapper;
+    }
+
+    public void setUserDtoMapper(UserDtoMapper userDtoMapper) {
+        this.userDtoMapper = userDtoMapper;
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");

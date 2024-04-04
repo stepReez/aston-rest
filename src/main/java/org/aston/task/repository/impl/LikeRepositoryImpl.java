@@ -33,6 +33,10 @@ public class LikeRepositoryImpl implements LikeRepository {
         recordResultSetMapper = new RecordResultSetMapperImpl();
     }
 
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
+
     @Override
     public void addLike(UUID recordId, UUID userId) {
         try (Connection connection = connectionManager.getConnection();
@@ -45,7 +49,6 @@ public class LikeRepositoryImpl implements LikeRepository {
             preparedStatement.setString(2, recordId.toString());
             preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -59,7 +62,6 @@ public class LikeRepositoryImpl implements LikeRepository {
             preparedStatement.setString(2, recordId.toString());
             preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -80,7 +82,6 @@ public class LikeRepositoryImpl implements LikeRepository {
             }
             return recordEntities;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -101,7 +102,6 @@ public class LikeRepositoryImpl implements LikeRepository {
             }
             return userEntities;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -118,7 +118,6 @@ public class LikeRepositoryImpl implements LikeRepository {
                 throw new NotFoundException("Like not found");
             }
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }

@@ -20,11 +20,15 @@ import java.util.UUID;
 public class RecordEntityRepositoryImpl implements RecordEntityRepository {
 
     private final RecordResultSetMapper recordResultSetMapper;
-    private final ConnectionManager connectionManager;
+    private ConnectionManager connectionManager;
 
     public RecordEntityRepositoryImpl() {
         recordResultSetMapper = new RecordResultSetMapperImpl();
         connectionManager = new ConnectionManagerImpl();
+    }
+
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
     @Override
@@ -100,11 +104,10 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
                      "WHERE record_id = ?")) {
             preparedStatement.setString(1, recordEntity.getTitle());
             preparedStatement.setString(2, recordEntity.getText());
-            preparedStatement.setString(2, uuid.toString());
+            preparedStatement.setString(3, uuid.toString());
             preparedStatement.execute();
             return findById(uuid);
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -120,7 +123,6 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
                 throw new NotFoundException("Record with id " + id.toString() + " not found");
             }
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -141,7 +143,6 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
 
             return recordEntities;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }

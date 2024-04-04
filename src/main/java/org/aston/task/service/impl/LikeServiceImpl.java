@@ -11,10 +11,14 @@ import java.util.UUID;
 
 public class LikeServiceImpl implements LikeService {
 
-    private final LikeRepository likeRepository;
+    private LikeRepository likeRepository;
 
     public LikeServiceImpl() {
         likeRepository = new LikeRepositoryImpl();
+    }
+
+    public void setLikeRepository(LikeRepository likeRepository) {
+        this.likeRepository = likeRepository;
     }
 
     @Override

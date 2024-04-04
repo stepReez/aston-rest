@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 @WebServlet(name = "user", value = "/user")
 public class UserServlet extends HttpServlet {
 
-    private final UserService userService;
+    private UserService userService;
 
-    private final UserDtoMapper userDtoMapper;
+    private UserDtoMapper userDtoMapper;
 
     private final Gson gson;
 
@@ -36,6 +36,14 @@ public class UserServlet extends HttpServlet {
         userService = new UserServiceImpl();
         userDtoMapper = new UserDtoMapperImpl();
         gson = new Gson();
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public void setUserDtoMapper(UserDtoMapper userDtoMapper) {
+        this.userDtoMapper = userDtoMapper;
     }
 
     @Override
@@ -85,9 +93,9 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
-        String userString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
         String query = req.getQueryString();
         if (query != null && Pattern.matches("^id=.+$", query)) {
+            String userString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             UUID id = UUID.fromString(req.getParameter("id"));
 
             UserIncomingDto userIncomingDto = gson.fromJson(userString, UserIncomingDto.class);

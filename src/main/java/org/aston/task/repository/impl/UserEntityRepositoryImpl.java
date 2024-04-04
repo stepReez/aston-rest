@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class UserEntityRepositoryImpl implements UserEntityRepository {
 
-    private final ConnectionManager connectionManager;
+    private ConnectionManager connectionManager;
 
     private final UserResultSetMapper userResultSetMapper;
 
@@ -27,6 +27,10 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
     public UserEntityRepositoryImpl() {
         userResultSetMapper = new UserResultSetMapperImpl();
         connectionManager = new ConnectionManagerImpl();
+    }
+
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
     @Override
@@ -42,7 +46,6 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
             }
             return user;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -56,7 +59,6 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
             return preparedStatement.execute();
 
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -72,7 +74,6 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
             }
             return userEntities;
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
 
@@ -88,7 +89,6 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
             return findById(user.getId());
 
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }
@@ -99,11 +99,10 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET user_name = ? " +
                      "WHERE user_id = ?")) {
             preparedStatement.setString(1, user.getUserName());
-            preparedStatement.setString(2, user.getId().toString());
+            preparedStatement.setString(2, uuid.toString());
             preparedStatement.execute();
             return findById(uuid);
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
 
@@ -117,10 +116,9 @@ public class UserEntityRepositoryImpl implements UserEntityRepository {
             preparedStatement.setString(1, id.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
-                throw new NotFoundException("User with id " + id.toString() + " not found");
+                throw new NotFoundException("User with id " + id + " not found");
             }
         } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException();
         }
     }

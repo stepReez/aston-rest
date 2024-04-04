@@ -15,16 +15,28 @@ import java.util.UUID;
 
 public class UserServiceImpl implements UserService {
 
-    private final UserEntityRepository userEntityRepository;
+    private UserEntityRepository userEntityRepository;
 
-    private final RecordEntityRepository recordEntityRepository;
+    private RecordEntityRepository recordEntityRepository;
 
-    private final LikeRepository likeRepository;
+    private LikeRepository likeRepository;
 
     public UserServiceImpl() {
         userEntityRepository = new UserEntityRepositoryImpl();
         recordEntityRepository = new RecordEntityRepositoryImpl();
         likeRepository = new LikeRepositoryImpl();
+    }
+
+    public void setUserEntityRepository(UserEntityRepository userEntityRepository) {
+        this.userEntityRepository = userEntityRepository;
+    }
+
+    public void setRecordEntityRepository(RecordEntityRepository recordEntityRepository) {
+        this.recordEntityRepository = recordEntityRepository;
+    }
+
+    public void setLikeRepository(LikeRepository likeRepository) {
+        this.likeRepository = likeRepository;
     }
 
     @Override
@@ -50,6 +62,7 @@ public class UserServiceImpl implements UserService {
     public UserEntity updateUser(UserEntity user, UUID id) {
         userEntityRepository.check(id);
         UserEntity userEntity = userEntityRepository.update(user, id);
+        userEntity.setRecords(recordEntityRepository.findRecordByAuthorId(id));
         userEntity.setLikes(likeRepository.findLikesByUserId(id));
         return userEntity;
     }
