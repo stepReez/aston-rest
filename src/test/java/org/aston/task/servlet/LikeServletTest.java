@@ -10,7 +10,9 @@ import org.aston.task.model.RecordEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.service.LikeService;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
+import org.aston.task.servlet.dto.RecordOutcomingShortDto;
 import org.aston.task.servlet.dto.UserOutcomingDto;
+import org.aston.task.servlet.dto.UserOutcomingShortDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
 import org.aston.task.servlet.mapper.UserDtoMapper;
 import org.junit.jupiter.api.Assertions;
@@ -47,12 +49,12 @@ class LikeServletTest {
                 .when(likeService.getLikesByUser(id))
                 .thenReturn(recordEntities);
 
-        List<RecordOutcomingDto> outcomingDtos = new ArrayList<>();
-        outcomingDtos.add(new RecordOutcomingDto());
+        List<RecordOutcomingShortDto> outcomingDtos = new ArrayList<>();
+        outcomingDtos.add(new RecordOutcomingShortDto());
 
         Mockito
-                .when(recordDtoMapper.outComingRecordMap(Mockito.any()))
-                .thenReturn(new RecordOutcomingDto());
+                .when(recordDtoMapper.outComingShortRecordMap(Mockito.any()))
+                .thenReturn(new RecordOutcomingShortDto());
 
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
@@ -97,12 +99,12 @@ class LikeServletTest {
                 .when(likeService.getLikesByRecord(id))
                 .thenReturn(userEntities);
 
-        List<UserOutcomingDto> outcomingDtos = new ArrayList<>();
-        outcomingDtos.add(new UserOutcomingDto());
+        List<UserOutcomingShortDto> outcomingDtos = new ArrayList<>();
+        outcomingDtos.add(new UserOutcomingShortDto());
 
         Mockito
-                .when(userDtoMapper.outComingUserMap(Mockito.any()))
-                .thenReturn(new UserOutcomingDto());
+                .when(userDtoMapper.outComingShortUserMap(Mockito.any()))
+                .thenReturn(new UserOutcomingShortDto());
 
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);

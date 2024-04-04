@@ -4,6 +4,7 @@ import org.aston.task.model.RecordEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.servlet.dto.UserIncomingDto;
 import org.aston.task.servlet.dto.UserOutcomingDto;
+import org.aston.task.servlet.dto.UserOutcomingShortDto;
 import org.aston.task.servlet.mapper.impl.UserDtoMapperImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,5 +67,25 @@ class UserDtoMapperTest {
         Assertions.assertEquals(2, userOutcomingDto.getLikes().size(), "Size must be equal " + 2);
         Assertions.assertEquals(recordId1.toString(), userOutcomingDto.getLikes().get(0), "Id must be equal " + recordId1);
         Assertions.assertEquals(recordId2.toString(), userOutcomingDto.getLikes().get(1), "Id must be equal " + recordId2);
+    }
+
+    @Test
+    void userDroMapper_OutComingUserShortMapTest() {
+        UserEntity userEntity = new UserEntity();
+        UUID userId = UUID.randomUUID();
+        userEntity.setId(userId);
+        String userName = "user";
+        userEntity.setName(userName);
+
+        RecordEntity recordEntity1 = new RecordEntity();
+        UUID recordId1 = UUID.randomUUID();
+        recordEntity1.setId(recordId1);
+        RecordEntity recordEntity2 = new RecordEntity();
+        UUID recordId2 = UUID.randomUUID();
+        recordEntity2.setId(recordId2);
+
+        UserOutcomingShortDto userOutcomingShortDto = userDtoMapper.outComingShortUserMap(userEntity);
+        Assertions.assertEquals(userId.toString(), userOutcomingShortDto.getId(), "Id must be equal " + userId);
+        Assertions.assertEquals(userName, userOutcomingShortDto.getName(), "Username must be equal " + userName);
     }
 }
