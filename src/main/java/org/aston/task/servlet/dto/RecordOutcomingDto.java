@@ -13,16 +13,10 @@ public class RecordOutcomingDto {
 
     private String authorId;
 
+    private String tag;
+
     public RecordOutcomingDto() {
 
-    }
-
-    public RecordOutcomingDto(String id, String title, String text, List<String> likes, String authorId) {
-        this.id = id;
-        this.title = title;
-        this.text = text;
-        this.likes = likes;
-        this.authorId = authorId;
     }
 
     public String getId() {
@@ -63,5 +57,13 @@ public class RecordOutcomingDto {
 
     public void setAuthorId(String authorId) {
         this.authorId = authorId;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

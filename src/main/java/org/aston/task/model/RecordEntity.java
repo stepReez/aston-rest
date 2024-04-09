@@ -14,6 +14,8 @@ public class RecordEntity {
 
     private UserEntity author;
 
+    private TagEntity tag;
+
     public UUID getId() {
         return id;
     }
@@ -54,5 +56,11 @@ public class RecordEntity {
         this.author = author;
     }
 
+    public TagEntity getTag() {
+        return tag;
+    }
 
+    public void setTag(TagEntity tag) {
+        this.tag = tag;
+    }
 }

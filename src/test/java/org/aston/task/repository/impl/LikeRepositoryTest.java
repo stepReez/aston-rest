@@ -1,8 +1,10 @@
 package org.aston.task.repository.impl;
 
 import org.aston.task.db.ConnectionManager;
+import org.aston.task.db.ConnectionManagerImpl;
 import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -29,6 +31,8 @@ public class LikeRepositoryTest {
 
     UserEntityRepositoryImpl userEntityRepository;
 
+    TagEntityRepositoryImpl tagEntityRepository;
+
     @BeforeAll
     static void start() {
         container.start();
@@ -44,11 +48,14 @@ public class LikeRepositoryTest {
         likeRepository = new LikeRepositoryImpl();
         recordEntityRepository = new RecordEntityRepositoryImpl();
         userEntityRepository = new UserEntityRepositoryImpl();
+        tagEntityRepository = new TagEntityRepositoryImpl();
 
         String jdbcURL = "?" + container.getJdbcUrl();
         likeRepository.setConnectionManager(new TestConnectionManager(jdbcURL));
         recordEntityRepository.setConnectionManager(new TestConnectionManager(jdbcURL));
         userEntityRepository.setConnectionManager(new TestConnectionManager(jdbcURL));
+        tagEntityRepository.setConnectionManager(new TestConnectionManager(jdbcURL));
+        tagEntityRepository.addTag("name");
     }
 
     private static class TestConnectionManager implements ConnectionManager {
@@ -84,6 +91,11 @@ public class LikeRepositoryTest {
         record.setText(text);
         record.setAuthor(user);
 
+        TagEntity tag = new TagEntity();
+        tag.setId(1);
+        tag.setName("name");
+
+        record.setTag(tag);
 
         userEntityRepository.save(user);
         recordEntityRepository.save(record);
@@ -120,6 +132,11 @@ public class LikeRepositoryTest {
         record.setText(text);
         record.setAuthor(user);
 
+        TagEntity tag = new TagEntity();
+        tag.setId(1);
+        tag.setName("name");
+
+        record.setTag(tag);
 
         userEntityRepository.save(user);
         recordEntityRepository.save(record);
@@ -154,6 +171,11 @@ public class LikeRepositoryTest {
         record.setText(text);
         record.setAuthor(user);
 
+        TagEntity tag = new TagEntity();
+        tag.setId(1);
+        tag.setName("name");
+
+        record.setTag(tag);
 
         userEntityRepository.save(user);
         recordEntityRepository.save(record);

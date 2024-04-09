@@ -6,6 +6,8 @@ public class RecordIncomingDto {
 
     private String text;
 
+    private int tag;
+
 
     public RecordIncomingDto() {
 
@@ -30,5 +32,13 @@ public class RecordIncomingDto {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public int getTag() {
+        return tag;
+    }
+
+    public void setTag(int tag) {
+        this.tag = tag;
     }
 }

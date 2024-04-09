@@ -71,6 +71,7 @@ public class LikeRepositoryImpl implements LikeRepository {
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM records " +
                      "FULL OUTER JOIN  public.likes l on records.record_id = l.record_id " +
+                     "LEFT JOIN public.tags t on records.tag_id = t.tag_id " +
                      "WHERE l.user_id = ?")) {
 
             preparedStatement.setString(1, userId.toString());

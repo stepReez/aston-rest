@@ -10,6 +10,8 @@ public class RecordOutcomingShortDto {
 
     private String authorId;
 
+    private String tag;
+
     public RecordOutcomingShortDto() {
 
     }
@@ -44,5 +46,13 @@ public class RecordOutcomingShortDto {
 
     public void setAuthorId(String authorId) {
         this.authorId = authorId;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

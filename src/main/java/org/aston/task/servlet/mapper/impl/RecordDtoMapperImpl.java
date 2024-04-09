@@ -1,6 +1,7 @@
 package org.aston.task.servlet.mapper.impl;
 
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
@@ -20,6 +21,7 @@ public class RecordDtoMapperImpl implements RecordDtoMapper {
         recordOutcomingDto.setAuthorId(recordEntity.getAuthor().getId().toString());
         List<String> likes = recordEntity.getLikes().stream().map(UserEntity::getId).map(UUID::toString).toList();
         recordOutcomingDto.setLikes(likes);
+        recordOutcomingDto.setTag(recordEntity.getTag().getName());
         return recordOutcomingDto;
     }
 
@@ -30,6 +32,7 @@ public class RecordDtoMapperImpl implements RecordDtoMapper {
         recordOutcomingShortDto.setTitle(recordEntity.getTitle());
         recordOutcomingShortDto.setText(recordEntity.getText());
         recordOutcomingShortDto.setAuthorId(recordEntity.getAuthor().getId().toString());
+        recordOutcomingShortDto.setTag(recordEntity.getTag().getName());
         return recordOutcomingShortDto;
     }
 
@@ -38,6 +41,9 @@ public class RecordDtoMapperImpl implements RecordDtoMapper {
         RecordEntity recordEntity = new RecordEntity();
         recordEntity.setTitle(recordIncomingDto.getTitle());
         recordEntity.setText(recordIncomingDto.getText());
+        TagEntity tag = new TagEntity();
+        tag.setId(recordIncomingDto.getTag());
+        recordEntity.setTag(tag);
         return recordEntity;
     }
 }

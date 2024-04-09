@@ -1,6 +1,7 @@
 package org.aston.task.servlet.mapper;
 
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
@@ -56,6 +57,12 @@ class RecordDtoMapperTest {
         recordEntity.setAuthor(user1);
         recordEntity.setLikes(userEntities);
 
+        TagEntity tag = new TagEntity();
+        tag.setId(1);
+        tag.setName("name");
+
+        recordEntity.setTag(tag);
+
         RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(recordEntity);
 
         Assertions.assertEquals(recordId.toString(), recordOutcomingDto.getId(), "Id must be equal " + recordId);
@@ -87,6 +94,12 @@ class RecordDtoMapperTest {
         recordEntity.setTitle(title);
         recordEntity.setText(text);
         recordEntity.setAuthor(user1);
+
+        TagEntity tag = new TagEntity();
+        tag.setId(1);
+        tag.setName("name");
+
+        recordEntity.setTag(tag);
 
         RecordOutcomingShortDto recordOutcomingShortDto = recordDtoMapper.outComingShortRecordMap(recordEntity);
 

@@ -3,7 +3,9 @@ package org.aston.task.repository.impl;
 import org.aston.task.db.ConnectionManager;
 import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
+import org.aston.task.repository.TagRepository;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -26,6 +28,8 @@ public class RecordRepositoryTest {
     RecordEntityRepositoryImpl recordEntityRepository;
 
     UserEntityRepositoryImpl userEntityRepository;
+
+    TagEntityRepositoryImpl tagRepository;
 
     UserEntity user;
 
@@ -58,18 +62,26 @@ public class RecordRepositoryTest {
         title = "Title";
         text = "Text";
 
+        TagEntity tag = new TagEntity();
+        tag.setId(1);
+        tag.setName("name");
+
         record.setId(recordId);
         record.setTitle(title);
         record.setText(text);
         record.setAuthor(user);
+        record.setTag(tag);
 
         container.start();
         recordEntityRepository = new RecordEntityRepositoryImpl();
         userEntityRepository = new UserEntityRepositoryImpl();
+        tagRepository = new TagEntityRepositoryImpl();
 
         String jdbcURL = "?" + container.getJdbcUrl();
         recordEntityRepository.setConnectionManager(new TestConnectionManager(jdbcURL));
         userEntityRepository.setConnectionManager(new TestConnectionManager(jdbcURL));
+        tagRepository.setConnectionManager(new TestConnectionManager(jdbcURL));
+        tagRepository.addTag(tag.getName());
     }
 
     @AfterEach
