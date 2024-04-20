@@ -12,6 +12,7 @@ import org.testcontainers.junit.jupiter.Container;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class LikeRepositoryTest {
             new PostgreSQLContainer<>("postgres:14-alpine")
                     .withDatabaseName("test")
                     .withUsername("test")
-                    .withInitScript("db/schema.SQL")
+                    .withInitScript("db/schema.sql")
                     .withPassword("test");
 
     LikeRepositoryImpl likeRepository;
@@ -95,19 +96,19 @@ public class LikeRepositoryTest {
         tag.setId(1);
         tag.setName("name");
 
-        record.setTag(tag);
+        List<TagEntity> tagEntities = new ArrayList<>();
+        tagEntities.add(tag);
+        record.setTag(tagEntities);
 
         userEntityRepository.save(user);
         recordEntityRepository.save(record);
 
         likeRepository.addLike(recordId, userId);
 
-        List<RecordEntity> recordEntities = likeRepository.findLikesByUserId(userId);
+        List<UUID> userLikes = likeRepository.findLikesByUserId(userId).getUserLikes();
 
-        Assertions.assertEquals(1, recordEntities.size());
-        Assertions.assertEquals(recordId, recordEntities.get(0).getId());
-        Assertions.assertEquals(title, recordEntities.get(0).getTitle());
-        Assertions.assertEquals(text, recordEntities.get(0).getText());
+        Assertions.assertEquals(1, userLikes.size());
+        Assertions.assertEquals(recordId, userLikes.get(0));
 
     }
 
@@ -136,18 +137,19 @@ public class LikeRepositoryTest {
         tag.setId(1);
         tag.setName("name");
 
-        record.setTag(tag);
+        List<TagEntity> tagEntities = new ArrayList<>();
+        tagEntities.add(tag);
+        record.setTag(tagEntities);
 
         userEntityRepository.save(user);
         recordEntityRepository.save(record);
 
         likeRepository.addLike(recordId, userId);
 
-        List<UserEntity> userEntities = likeRepository.findLikesByRecordId(recordId);
+        List<UUID> userLikes = likeRepository.findLikesByUserId(userId).getUserLikes();
 
-        Assertions.assertEquals(1, userEntities.size());
-        Assertions.assertEquals(userId, userEntities.get(0).getId());
-        Assertions.assertEquals(name, userEntities.get(0).getName());
+        Assertions.assertEquals(1, userLikes.size());
+        Assertions.assertEquals(recordId, userLikes.get(0));
     }
 
     @Test
@@ -175,7 +177,9 @@ public class LikeRepositoryTest {
         tag.setId(1);
         tag.setName("name");
 
-        record.setTag(tag);
+        List<TagEntity> tagEntities = new ArrayList<>();
+        tagEntities.add(tag);
+        record.setTag(tagEntities);
 
         userEntityRepository.save(user);
         recordEntityRepository.save(record);

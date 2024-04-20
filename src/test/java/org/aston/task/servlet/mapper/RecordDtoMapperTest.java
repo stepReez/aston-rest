@@ -1,6 +1,7 @@
 package org.aston.task.servlet.mapper;
 
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.servlet.dto.RecordIncomingDto;
@@ -45,9 +46,12 @@ class RecordDtoMapperTest {
         UserEntity user2 = new UserEntity();
         UUID userId2 = UUID.randomUUID();
         user2.setId(userId2);
-        List<UserEntity> userEntities = new ArrayList<>();
-        userEntities.add(user1);
-        userEntities.add(user2);
+        List<UUID> recordLikesUUID = new ArrayList<>();
+        recordLikesUUID.add(user1.getId());
+        recordLikesUUID.add(user2.getId());
+
+        RecordLikes recordLikes = new RecordLikes();
+        recordLikes.setRecordLikes(recordLikesUUID);
 
         RecordEntity recordEntity = new RecordEntity();
         UUID recordId = UUID.randomUUID();
@@ -55,13 +59,15 @@ class RecordDtoMapperTest {
         recordEntity.setTitle(title);
         recordEntity.setText(text);
         recordEntity.setAuthor(user1);
-        recordEntity.setLikes(userEntities);
+        recordEntity.setLikes(recordLikes);
 
         TagEntity tag = new TagEntity();
         tag.setId(1);
         tag.setName("name");
 
-        recordEntity.setTag(tag);
+        List<TagEntity> tagEntities = new ArrayList<>();
+        tagEntities.add(tag);
+        recordEntity.setTag(tagEntities);
 
         RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(recordEntity);
 
@@ -69,9 +75,9 @@ class RecordDtoMapperTest {
         Assertions.assertEquals(title, recordOutcomingDto.getTitle(), "Title must be equal " + title);
         Assertions.assertEquals(text, recordOutcomingDto.getText(), "Text must be equal " + text);
         Assertions.assertEquals(userId1.toString(), recordOutcomingDto.getAuthorId(), "Author id must be equal " + userId1);
-        Assertions.assertEquals(2, recordOutcomingDto.getLikes().size(), "Size must be equal " + 2);
-        Assertions.assertEquals(userId1.toString(), recordOutcomingDto.getLikes().get(0), "Id must be equal " + userId1);
-        Assertions.assertEquals(userId2.toString(), recordOutcomingDto.getLikes().get(1), "Id must be equal " + userId2);
+        Assertions.assertEquals(2, recordOutcomingDto.getLikes().getRecordLikes().size(), "Size must be equal " + 2);
+        Assertions.assertEquals(userId1.toString(), recordOutcomingDto.getLikes().getRecordLikes().get(0), "Id must be equal " + userId1);
+        Assertions.assertEquals(userId2.toString(), recordOutcomingDto.getLikes().getRecordLikes().get(1), "Id must be equal " + userId2);
     }
 
     @Test
@@ -99,7 +105,9 @@ class RecordDtoMapperTest {
         tag.setId(1);
         tag.setName("name");
 
-        recordEntity.setTag(tag);
+        List<TagEntity> tagEntities = new ArrayList<>();
+        tagEntities.add(tag);
+        recordEntity.setTag(tagEntities);
 
         RecordOutcomingShortDto recordOutcomingShortDto = recordDtoMapper.outComingShortRecordMap(recordEntity);
 

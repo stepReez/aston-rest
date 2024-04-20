@@ -1,12 +1,14 @@
 package org.aston.task.servlet.dto;
 
+import java.util.List;
+
 public class RecordIncomingDto {
 
     private String title;
 
     private String text;
 
-    private int tag;
+    private List<Integer> tag;
 
 
     public RecordIncomingDto() {
@@ -34,11 +36,11 @@ public class RecordIncomingDto {
         this.text = text;
     }
 
-    public int getTag() {
+    public List<Integer> getTag() {
         return tag;
     }
 
-    public void setTag(int tag) {
+    public void setTag(List<Integer> tag) {
         this.tag = tag;
     }
 }

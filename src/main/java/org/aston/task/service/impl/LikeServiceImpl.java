@@ -1,7 +1,9 @@
 package org.aston.task.service.impl;
 
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.model.UserEntity;
+import org.aston.task.model.UserLikes;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.impl.LikeRepositoryImpl;
 import org.aston.task.service.LikeService;
@@ -33,12 +35,12 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public List<RecordEntity> getLikesByUser(UUID userId) {
+    public UserLikes getLikesByUser(UUID userId) {
         return likeRepository.findLikesByUserId(userId);
     }
 
     @Override
-    public List<UserEntity> getLikesByRecord(UUID recordId) {
+    public RecordLikes getLikesByRecord(UUID recordId) {
         return likeRepository.findLikesByRecordId(recordId);
     }
 }

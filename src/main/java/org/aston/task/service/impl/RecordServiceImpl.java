@@ -1,11 +1,14 @@
 package org.aston.task.service.impl;
 
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.RecordEntityRepository;
+import org.aston.task.repository.TagRepository;
 import org.aston.task.repository.UserEntityRepository;
 import org.aston.task.repository.impl.LikeRepositoryImpl;
 import org.aston.task.repository.impl.RecordEntityRepositoryImpl;
+import org.aston.task.repository.impl.TagEntityRepositoryImpl;
 import org.aston.task.repository.impl.UserEntityRepositoryImpl;
 import org.aston.task.service.RecordService;
 
@@ -21,10 +24,13 @@ public class RecordServiceImpl implements RecordService {
 
     private LikeRepository likeRepository;
 
+    private TagRepository tagRepository;
+
     public RecordServiceImpl() {
         recordEntityRepository = new RecordEntityRepositoryImpl();
         userEntityRepository = new UserEntityRepositoryImpl();
         likeRepository = new LikeRepositoryImpl();
+        tagRepository = new TagEntityRepositoryImpl();
     }
 
     public void setRecordEntityRepository(RecordEntityRepository recordEntityRepository) {
@@ -39,12 +45,17 @@ public class RecordServiceImpl implements RecordService {
         this.likeRepository = likeRepository;
     }
 
+    public void setTagRepository(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
+
     @Override
     public RecordEntity createRecord(RecordEntity recordEntity, UUID userId) {
         recordEntity.setId(UUID.randomUUID());
         recordEntity.setAuthor(userEntityRepository.findById(userId));
         RecordEntity record = recordEntityRepository.save(recordEntity);
-        record.setLikes(new ArrayList<>());
+        record.setLikes(new RecordLikes());
+        record.setTag(tagRepository.getTagsByRecord(recordEntity.getId()));
         return record;
     }
 
@@ -53,6 +64,7 @@ public class RecordServiceImpl implements RecordService {
         recordEntityRepository.check(id);
         RecordEntity recordEntity = recordEntityRepository.findById(id);
         recordEntity.setLikes(likeRepository.findLikesByRecordId(id));
+        recordEntity.setTag(tagRepository.getTagsByRecord(id));
         return recordEntity;
     }
 
@@ -61,6 +73,7 @@ public class RecordServiceImpl implements RecordService {
         recordEntityRepository.check(id);
         RecordEntity record = recordEntityRepository.update(recordEntity, id);
         record.setLikes(likeRepository.findLikesByRecordId(id));
+        record.setTag(tagRepository.getTagsByRecord(recordEntity.getId()));
         return record;
     }
 
@@ -75,6 +88,7 @@ public class RecordServiceImpl implements RecordService {
         List<RecordEntity> recordEntities = recordEntityRepository.findAll();
         recordEntities.forEach(recordEntity ->
                 recordEntity.setLikes(likeRepository.findLikesByRecordId(recordEntity.getId())));
+        recordEntities.forEach(recordEntity -> recordEntity.setTag(tagRepository.getTagsByRecord(recordEntity.getId())));
         return recordEntities;
     }
 }

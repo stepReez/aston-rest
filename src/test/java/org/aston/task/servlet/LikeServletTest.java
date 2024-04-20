@@ -7,14 +7,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aston.task.exceptions.BadRequestException;
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.model.UserEntity;
+import org.aston.task.model.UserLikes;
 import org.aston.task.service.LikeService;
-import org.aston.task.servlet.dto.RecordOutcomingDto;
+import org.aston.task.servlet.dto.RecordLikesDto;
 import org.aston.task.servlet.dto.RecordOutcomingShortDto;
-import org.aston.task.servlet.dto.UserOutcomingDto;
+import org.aston.task.servlet.dto.UserLikesDto;
 import org.aston.task.servlet.dto.UserOutcomingShortDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
+import org.aston.task.servlet.mapper.RecordLikesDtoMapper;
 import org.aston.task.servlet.mapper.UserDtoMapper;
+import org.aston.task.servlet.mapper.UserLikesDtoMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,27 +38,28 @@ class LikeServletTest {
 
     @Test
     void doGetByUserTest() throws IOException, ServletException {
-        RecordDtoMapper recordDtoMapper = Mockito.mock(RecordDtoMapper.class);
-        likeServlet.setRecordDtoMapper(recordDtoMapper);
+        UserLikesDtoMapper userLikesDtoMapper = Mockito.mock(UserLikesDtoMapper.class);
+        likeServlet.setUserLikesDtoMapper(userLikesDtoMapper);
 
         LikeService likeService = Mockito.mock(LikeService.class);
         likeServlet.setLikeService(likeService);
 
         UUID id = UUID.randomUUID();
 
-        List<RecordEntity> recordEntities = new ArrayList<>();
-        recordEntities.add(new RecordEntity());
+        UserLikes userLikes = new UserLikes();
+        List<UUID> uuids = new ArrayList<>();
+        uuids.add(UUID.randomUUID());
+        userLikes.setUserLikes(uuids);
 
         Mockito
                 .when(likeService.getLikesByUser(id))
-                .thenReturn(recordEntities);
+                .thenReturn(userLikes);
 
-        List<RecordOutcomingShortDto> outcomingDtos = new ArrayList<>();
-        outcomingDtos.add(new RecordOutcomingShortDto());
+        UserLikesDto userLikesDto = new UserLikesDto();
 
         Mockito
-                .when(recordDtoMapper.outComingShortRecordMap(Mockito.any()))
-                .thenReturn(new RecordOutcomingShortDto());
+                .when(userLikesDtoMapper.map(Mockito.any()))
+                .thenReturn(new UserLikesDto());
 
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
@@ -76,7 +81,7 @@ class LikeServletTest {
 
         likeServlet.doGet(req, resp);
 
-        JsonElement jsonUser = gson.toJsonTree(outcomingDtos);
+        JsonElement jsonUser = gson.toJsonTree(userLikesDto);
         String userString = gson.toJson(jsonUser);
 
         Assertions.assertEquals(userString, out.toString());
@@ -84,27 +89,28 @@ class LikeServletTest {
 
     @Test
     void doGetByRecordTest() throws IOException, ServletException {
-        UserDtoMapper userDtoMapper = Mockito.mock(UserDtoMapper.class);
-        likeServlet.setUserDtoMapper(userDtoMapper);
+        RecordLikesDtoMapper recordLikesDtoMapper = Mockito.mock(RecordLikesDtoMapper.class);
+        likeServlet.setRecordLikesDtoMapper(recordLikesDtoMapper);
 
         LikeService likeService = Mockito.mock(LikeService.class);
         likeServlet.setLikeService(likeService);
 
         UUID id = UUID.randomUUID();
 
-        List<UserEntity> userEntities = new ArrayList<>();
-        userEntities.add(new UserEntity());
+        RecordLikes recordLikes = new RecordLikes();
+        List<UUID> uuids = new ArrayList<>();
+        uuids.add(UUID.randomUUID());
+        recordLikes.setRecordLikes(uuids);
 
         Mockito
                 .when(likeService.getLikesByRecord(id))
-                .thenReturn(userEntities);
+                .thenReturn(recordLikes);
 
-        List<UserOutcomingShortDto> outcomingDtos = new ArrayList<>();
-        outcomingDtos.add(new UserOutcomingShortDto());
+        RecordLikesDto recordLikesDto = new RecordLikesDto();
 
         Mockito
-                .when(userDtoMapper.outComingShortUserMap(Mockito.any()))
-                .thenReturn(new UserOutcomingShortDto());
+                .when(recordLikesDtoMapper.map(Mockito.any()))
+                .thenReturn(new RecordLikesDto());
 
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
@@ -126,7 +132,7 @@ class LikeServletTest {
 
         likeServlet.doGet(req, resp);
 
-        JsonElement jsonUser = gson.toJsonTree(outcomingDtos);
+        JsonElement jsonUser = gson.toJsonTree(recordLikesDto);
         String userString = gson.toJson(jsonUser);
 
         Assertions.assertEquals(userString, out.toString());

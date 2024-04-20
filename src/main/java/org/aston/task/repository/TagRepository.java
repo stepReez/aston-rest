@@ -3,6 +3,7 @@ package org.aston.task.repository;
 import org.aston.task.model.TagEntity;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface TagRepository {
 
@@ -13,4 +14,6 @@ public interface TagRepository {
     List<TagEntity> getAllTags();
 
     void check(int id);
+
+    List<TagEntity> getTagsByRecord(UUID id);
 }

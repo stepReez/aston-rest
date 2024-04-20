@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface RecordEntityRepository extends Repository<RecordEntity, UUID>{
 
     List<RecordEntity> findRecordByAuthorId(UUID authorId);
+
+    void addTag(int tagId, UUID recordId);
 }

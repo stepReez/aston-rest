@@ -33,9 +33,8 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
     @Override
     public RecordEntity findById(UUID id) {
         try (Connection connection = connectionManager.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM records " +
-                "LEFT JOIN public.tags t on records.tag_id = t.tag_id " +
-                "WHERE record_id = (?)")) {
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM records AS r " +
+                "WHERE r.record_id = (?)")) {
             preparedStatement.setString(1, id.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             RecordEntity record = new RecordEntity();
@@ -51,7 +50,7 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
     @Override
     public boolean deleteById(UUID id) {
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM records " +
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE  FROM records " +
                      "WHERE record_id = (?)")) {
             preparedStatement.setString(1, id.toString());
             return preparedStatement.execute();
@@ -64,8 +63,7 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
     @Override
     public List<RecordEntity> findAll() {
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM records " +
-                     "LEFT JOIN public.tags t on records.tag_id = t.tag_id")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM records AS r")) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<RecordEntity> recordEntities = new ArrayList<>();
             while (resultSet.next()) {
@@ -82,13 +80,15 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
     public RecordEntity save(RecordEntity recordEntity) {
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO records " +
-                     "VALUES (?, ?, ?, ?, ?)")) {
+                     "VALUES (?, ?, ?, ?)")) {
             preparedStatement.setString(1, recordEntity.getId().toString());
             preparedStatement.setString(2, recordEntity.getAuthor().getId().toString());
             preparedStatement.setString(3, recordEntity.getTitle());
             preparedStatement.setString(4, recordEntity.getText());
-            preparedStatement.setInt(5, recordEntity.getTag().getId());
             preparedStatement.execute();
+            if (!recordEntity.getTag().isEmpty()) {
+                recordEntity.getTag().forEach(x -> addTag(x.getId(), recordEntity.getId()));
+            }
             return findById(recordEntity.getId());
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -99,13 +99,16 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
     @Override
     public RecordEntity update(RecordEntity recordEntity, UUID uuid) {
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE records SET title = ?, text = ?, tag_id = ? " +
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE records " +
+                     "SET title = ?, text = ? " +
                      "WHERE record_id = ?")) {
             preparedStatement.setString(1, recordEntity.getTitle());
             preparedStatement.setString(2, recordEntity.getText());
-            preparedStatement.setInt(3, recordEntity.getTag().getId());
-            preparedStatement.setString(4, uuid.toString());
+            preparedStatement.setString(3, uuid.toString());
             preparedStatement.execute();
+            if (!recordEntity.getTag().isEmpty()) {
+                recordEntity.getTag().forEach(x -> addTag(x.getId(), recordEntity.getId()));
+            }
             return findById(uuid);
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException();
@@ -130,8 +133,7 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
     @Override
     public List<RecordEntity> findRecordByAuthorId(UUID authorId) {
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM records " +
-                     "LEFT JOIN public.tags t on records.tag_id = t.tag_id " +
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM records AS r " +
                      "WHERE author_id = (?)")) {
             preparedStatement.setString(1, authorId.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -143,6 +145,19 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
             }
 
             return recordEntities;
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public void addTag(int tagId, UUID recordId) {
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO tags_records " +
+                     "VALUES (?, ?)")) {
+            preparedStatement.setInt(1, tagId);
+            preparedStatement.setString(2, recordId.toString());
+            preparedStatement.execute();
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException();
         }

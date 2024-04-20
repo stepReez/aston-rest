@@ -1,7 +1,9 @@
 package org.aston.task.service.impl;
 
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.model.UserEntity;
+import org.aston.task.model.UserLikes;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.impl.LikeRepositoryImpl;
 import org.junit.jupiter.api.Assertions;
@@ -27,7 +29,7 @@ class LikeServiceTest {
         LikeRepository likeRepositoryMock = Mockito.mock(LikeRepositoryImpl.class);
         likeService.setLikeRepository(likeRepositoryMock);
 
-        List<RecordEntity> recordEntities = new ArrayList<>();
+        List<UUID> userLikesUUID = new ArrayList<>();
 
         for (int i = 0; i < 2; i++) {
             RecordEntity recordEntity = new RecordEntity();
@@ -45,14 +47,17 @@ class LikeServiceTest {
             userEntity.setId(authorId);
 
             recordEntity.setAuthor(userEntity);
-            recordEntities.add(recordEntity);
+            userLikesUUID.add(uuid);
         }
+
+        UserLikes userLikes = new UserLikes();
+        userLikes.setUserLikes(userLikesUUID);
         UUID id = UUID.randomUUID();
         Mockito
                 .when(likeRepositoryMock.findLikesByUserId(id))
-                .thenReturn(recordEntities);
+                .thenReturn(userLikes);
 
-        List<RecordEntity> recordEntityList = likeService.getLikesByUser(id);
+        List<UUID> recordEntityList = likeService.getLikesByUser(id).getUserLikes();
 
         Assertions.assertEquals(2, recordEntityList.size());
     }
@@ -62,7 +67,7 @@ class LikeServiceTest {
         LikeRepositoryImpl likeRepositoryMock = Mockito.mock(LikeRepositoryImpl.class);
         likeService.setLikeRepository(likeRepositoryMock);
 
-        List<UserEntity> userEntities = new ArrayList<>();
+        List<UUID> recordLikesUUID = new ArrayList<>();
 
         for (int i = 0; i < 2; i++) {
             UserEntity user = new UserEntity();
@@ -73,16 +78,18 @@ class LikeServiceTest {
             user.setId(uuid);
             user.setName(name);
 
-            userEntities.add(user);
+            recordLikesUUID.add(uuid);
         }
 
         UUID id = UUID.randomUUID();
 
+        RecordLikes recordLikes = new RecordLikes();
+        recordLikes.setRecordLikes(recordLikesUUID);
         Mockito
                 .when(likeRepositoryMock.findLikesByRecordId(id))
-                .thenReturn(userEntities);
+                .thenReturn(recordLikes);
 
-        List<UserEntity> userEntityList = likeService.getLikesByRecord(id);
+        List<UUID> userEntityList = likeService.getLikesByRecord(id).getRecordLikes();
 
         Assertions.assertEquals(2, userEntityList.size());
     }

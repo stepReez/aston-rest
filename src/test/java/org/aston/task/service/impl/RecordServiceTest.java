@@ -1,9 +1,11 @@
 package org.aston.task.service.impl;
 
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.model.UserEntity;
 import org.aston.task.repository.impl.LikeRepositoryImpl;
 import org.aston.task.repository.impl.RecordEntityRepositoryImpl;
+import org.aston.task.repository.impl.TagEntityRepositoryImpl;
 import org.aston.task.repository.impl.UserEntityRepositoryImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,6 +49,13 @@ class RecordServiceTest {
         UserEntityRepositoryImpl userEntityRepository = Mockito.mock(UserEntityRepositoryImpl.class);
         recordService.setUserEntityRepository(userEntityRepository);
 
+        TagEntityRepositoryImpl tagEntityRepository = Mockito.mock(TagEntityRepositoryImpl.class);
+        recordService.setTagRepository(tagEntityRepository);
+
+        Mockito
+                .when(tagEntityRepository.getTagsByRecord(Mockito.any()))
+                .thenReturn(new ArrayList<>());
+
         Mockito
                 .when(userEntityRepository.findById(userId))
                 .thenReturn(userEntity);
@@ -88,13 +97,20 @@ class RecordServiceTest {
         LikeRepositoryImpl likeRepository = Mockito.mock(LikeRepositoryImpl.class);
         recordService.setLikeRepository(likeRepository);
 
+        TagEntityRepositoryImpl tagEntityRepository = Mockito.mock(TagEntityRepositoryImpl.class);
+        recordService.setTagRepository(tagEntityRepository);
+
+        Mockito
+                .when(tagEntityRepository.getTagsByRecord(Mockito.any()))
+                .thenReturn(new ArrayList<>());
+
         Mockito
                 .when(recordEntityRepository.findById(uuid))
                 .thenReturn(recordEntity);
 
         Mockito
                 .when(likeRepository.findLikesByRecordId(uuid))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(new RecordLikes());
 
         RecordEntity record = recordService.findRecordById(uuid);
 
@@ -130,13 +146,20 @@ class RecordServiceTest {
         LikeRepositoryImpl likeRepository = Mockito.mock(LikeRepositoryImpl.class);
         recordService.setLikeRepository(likeRepository);
 
+        TagEntityRepositoryImpl tagEntityRepository = Mockito.mock(TagEntityRepositoryImpl.class);
+        recordService.setTagRepository(tagEntityRepository);
+
+        Mockito
+                .when(tagEntityRepository.getTagsByRecord(Mockito.any()))
+                .thenReturn(new ArrayList<>());
+
         Mockito
                 .when(recordEntityRepository.update(recordEntity, uuid))
                 .thenReturn(recordEntity);
 
         Mockito
                 .when(likeRepository.findLikesByRecordId(uuid))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(new RecordLikes());
 
         RecordEntity record = recordService.updateRecord(recordEntity, uuid);
 
@@ -192,13 +215,20 @@ class RecordServiceTest {
         LikeRepositoryImpl likeRepository = Mockito.mock(LikeRepositoryImpl.class);
         recordService.setLikeRepository(likeRepository);
 
+        TagEntityRepositoryImpl tagEntityRepository = Mockito.mock(TagEntityRepositoryImpl.class);
+        recordService.setTagRepository(tagEntityRepository);
+
+        Mockito
+                .when(tagEntityRepository.getTagsByRecord(Mockito.any()))
+                .thenReturn(new ArrayList<>());
+
         Mockito
                 .when(recordEntityRepository.findAll())
                 .thenReturn(recordEntities);
 
         Mockito
                 .when(likeRepository.findLikesByRecordId(Mockito.any()))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(new RecordLikes());
 
         List<RecordEntity> recordEntityList = recordService.findAll();
 

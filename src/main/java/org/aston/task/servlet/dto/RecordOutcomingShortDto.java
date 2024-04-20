@@ -1,5 +1,7 @@
 package org.aston.task.servlet.dto;
 
+import java.util.List;
+
 public class RecordOutcomingShortDto {
 
     private String id;
@@ -10,7 +12,7 @@ public class RecordOutcomingShortDto {
 
     private String authorId;
 
-    private String tag;
+    private List<String> tag;
 
     public RecordOutcomingShortDto() {
 
@@ -48,11 +50,11 @@ public class RecordOutcomingShortDto {
         this.authorId = authorId;
     }
 
-    public String getTag() {
+    public List<String> getTag() {
         return tag;
     }
 
-    public void setTag(String tag) {
+    public void setTag(List<String> tag) {
         this.tag = tag;
     }
 }

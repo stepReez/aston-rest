@@ -2,6 +2,7 @@ package org.aston.task.service.impl;
 
 import org.aston.task.model.RecordEntity;
 import org.aston.task.model.UserEntity;
+import org.aston.task.model.UserLikes;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.RecordEntityRepository;
 import org.aston.task.repository.UserEntityRepository;
@@ -43,7 +44,7 @@ class UserServiceTest {
 
         Assertions.assertEquals(name, outComeUser.getName(), "Name must be equal " + name);
         Assertions.assertNotNull(outComeUser.getId(), "Id must be not null");
-        Assertions.assertNotNull(outComeUser.getLikes(), "Likes must be not null");
+        Assertions.assertNotNull(outComeUser.getUserLikes(), "Likes must be not null");
         Assertions.assertNotNull(outComeUser.getRecords(), "Records must be not null");
     }
 
@@ -75,13 +76,13 @@ class UserServiceTest {
 
         Mockito
                 .when(likeRepositoryMock.findLikesByUserId(Mockito.any()))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(new UserLikes());
 
         UserEntity outComingUser = userService.findUserById(id);
 
         Assertions.assertEquals(id, outComingUser.getId(), "Id must be equal " + id);
         Assertions.assertEquals(name, outComingUser.getName(), "Name must be equal " + name);
-        Assertions.assertNotNull(outComingUser.getLikes(), "Likes must be not null");
+        Assertions.assertNotNull(outComingUser.getUserLikes(), "Likes must be not null");
         Assertions.assertNotNull(outComingUser.getRecords(), "Records must be not null");
     }
 
@@ -113,13 +114,13 @@ class UserServiceTest {
 
         Mockito
                 .when(likeRepositoryMock.findLikesByUserId(Mockito.any()))
-                .thenReturn(new ArrayList<>());
+                .thenReturn(new UserLikes());
 
         UserEntity outComingUser = userService.updateUser(userEntity, id);
 
         Assertions.assertEquals(id, outComingUser.getId(), "Id must be equal " + id);
         Assertions.assertEquals(name, outComingUser.getName(), "Name must be equal " + name);
-        Assertions.assertNotNull(outComingUser.getLikes(), "Likes must be not null");
+        Assertions.assertNotNull(outComingUser.getUserLikes(), "Likes must be not null");
         Assertions.assertNotNull(outComingUser.getRecords(), "Records must be not null");
     }
 
@@ -178,7 +179,7 @@ class UserServiceTest {
                 .thenReturn(recordEntities);
 
 
-        List<RecordEntity> likes = new ArrayList<>();
+        UserLikes likes = new UserLikes();
         Mockito
                 .when(likeRepositoryMock.findLikesByUserId(Mockito.any()))
                 .thenReturn(likes);
@@ -190,7 +191,7 @@ class UserServiceTest {
         Assertions.assertEquals(id2, userEntityList.get(1).getId(), "Id must be equal " + id2);
         Assertions.assertNotNull(userEntityList.get(0).getRecords());
         Assertions.assertNotNull(userEntityList.get(1).getRecords());
-        Assertions.assertNotNull(userEntityList.get(0).getLikes());
-        Assertions.assertNotNull(userEntityList.get(1).getLikes());
+        Assertions.assertNotNull(userEntityList.get(0).getUserLikes());
+        Assertions.assertNotNull(userEntityList.get(1).getUserLikes());
     }
 }

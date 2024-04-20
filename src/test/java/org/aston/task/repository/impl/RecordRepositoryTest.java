@@ -12,6 +12,7 @@ import org.testcontainers.junit.jupiter.Container;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class RecordRepositoryTest {
             new PostgreSQLContainer<>("postgres:14-alpine")
                     .withDatabaseName("test")
                     .withUsername("test")
-                    .withInitScript("db/schema.SQL")
+                    .withInitScript("db/schema.sql")
                     .withPassword("test");
 
     RecordEntityRepositoryImpl recordEntityRepository;
@@ -70,7 +71,9 @@ public class RecordRepositoryTest {
         record.setTitle(title);
         record.setText(text);
         record.setAuthor(user);
-        record.setTag(tag);
+        List<TagEntity> tagEntities = new ArrayList<>();
+        tagEntities.add(tag);
+        record.setTag(tagEntities);
 
         container.start();
         recordEntityRepository = new RecordEntityRepositoryImpl();

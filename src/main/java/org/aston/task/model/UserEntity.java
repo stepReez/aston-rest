@@ -10,7 +10,7 @@ public class UserEntity {
 
     private List<RecordEntity> records;
 
-    private List<RecordEntity> likes;
+    private UserLikes userLikes;
 
     public UUID getId() {
         return id;
@@ -36,11 +36,11 @@ public class UserEntity {
         this.records = records;
     }
 
-    public List<RecordEntity> getLikes() {
-        return likes;
+    public UserLikes getUserLikes() {
+        return userLikes;
     }
 
-    public void setLikes(List<RecordEntity> likes) {
-        this.likes = likes;
+    public void setUserLikes(UserLikes userLikes) {
+        this.userLikes = userLikes;
     }
 }

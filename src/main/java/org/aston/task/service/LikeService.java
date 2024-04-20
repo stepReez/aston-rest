@@ -1,7 +1,9 @@
 package org.aston.task.service;
 
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.model.UserEntity;
+import org.aston.task.model.UserLikes;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,7 +13,7 @@ public interface LikeService {
 
     void removeLike(UUID recordId, UUID userId);
 
-    List<RecordEntity> getLikesByUser(UUID userId);
+    UserLikes getLikesByUser(UUID userId);
 
-    List<UserEntity> getLikesByRecord(UUID recordId);
+    RecordLikes getLikesByRecord(UUID recordId);
 }

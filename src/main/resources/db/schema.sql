@@ -9,7 +9,6 @@ CREATE TABLE records (
   author_id varchar(36),
   title varchar,
   text varchar,
-  tag_id int,
   CONSTRAINT record PRIMARY KEY (record_id)
 );
 
@@ -24,10 +23,17 @@ CREATE TABLE tags (
   CONSTRAINT tag_id PRIMARY KEY (tag_id)
 );
 
+CREATE TABLE tags_records (
+  tag_id int,
+  record_id varchar(36)
+);
+
 ALTER TABLE records ADD FOREIGN KEY (author_id) REFERENCES "users" (user_id);
 
-ALTER TABLE likes ADD FOREIGN KEY (user_id) REFERENCES "users" (user_id);
+ALTER TABLE likes ADD FOREIGN KEY (user_id) REFERENCES "users" (user_id) ON DELETE CASCADE;
 
-ALTER TABLE likes ADD FOREIGN KEY (record_id) REFERENCES "records" (record_id);
+ALTER TABLE likes ADD FOREIGN KEY (record_id) REFERENCES "records" (record_id) ON DELETE CASCADE;
 
-ALTER TABLE records ADD FOREIGN KEY (tag_id) REFERENCES tags (tag_id);
+ALTER TABLE tags_records ADD FOREIGN KEY (tag_id) REFERENCES tags (tag_id) ON DELETE CASCADE;
+
+ALTER TABLE tags_records ADD FOREIGN KEY (record_id) REFERENCES records (record_id) ON DELETE CASCADE;

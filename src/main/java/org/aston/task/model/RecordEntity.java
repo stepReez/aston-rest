@@ -10,11 +10,11 @@ public class RecordEntity {
 
     private String text;
 
-    private List<UserEntity> likes;
+    private RecordLikes likes;
 
     private UserEntity author;
 
-    private TagEntity tag;
+    private List<TagEntity> tag;
 
     public UUID getId() {
         return id;
@@ -40,11 +40,11 @@ public class RecordEntity {
         this.text = text;
     }
 
-    public List<UserEntity> getLikes() {
+    public RecordLikes getLikes() {
         return likes;
     }
 
-    public void setLikes(List<UserEntity> likes) {
+    public void setLikes(RecordLikes likes) {
         this.likes = likes;
     }
 
@@ -56,11 +56,11 @@ public class RecordEntity {
         this.author = author;
     }
 
-    public TagEntity getTag() {
+    public List<TagEntity> getTag() {
         return tag;
     }
 
-    public void setTag(TagEntity tag) {
+    public void setTag(List<TagEntity> tag) {
         this.tag = tag;
     }
 }

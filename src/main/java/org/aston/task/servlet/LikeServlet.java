@@ -8,16 +8,22 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aston.task.exceptions.BadRequestException;
-import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.model.UserEntity;
+import org.aston.task.model.UserLikes;
 import org.aston.task.service.LikeService;
 import org.aston.task.service.impl.LikeServiceImpl;
+import org.aston.task.servlet.dto.RecordLikesDto;
 import org.aston.task.servlet.dto.RecordOutcomingShortDto;
+import org.aston.task.servlet.dto.UserLikesDto;
 import org.aston.task.servlet.dto.UserOutcomingShortDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
+import org.aston.task.servlet.mapper.RecordLikesDtoMapper;
 import org.aston.task.servlet.mapper.UserDtoMapper;
-import org.aston.task.servlet.mapper.impl.RecordDtoMapperImpl;
+import org.aston.task.servlet.mapper.UserLikesDtoMapper;
+import org.aston.task.servlet.mapper.impl.RecordLikesDtoMapperImpl;
 import org.aston.task.servlet.mapper.impl.UserDtoMapperImpl;
+import org.aston.task.servlet.mapper.impl.UserLikesDtoMapperImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,16 +35,16 @@ public class LikeServlet extends HttpServlet {
     
     private LikeService likeService;
 
-    private RecordDtoMapper recordDtoMapper;
+    private RecordLikesDtoMapper recordLikesDtoMapper;
 
-    private UserDtoMapper userDtoMapper;
+    private UserLikesDtoMapper userLikesDtoMapper;
 
     private final Gson gson;
 
     public LikeServlet() {
         likeService = new LikeServiceImpl();
-        recordDtoMapper = new RecordDtoMapperImpl();
-        userDtoMapper = new UserDtoMapperImpl();
+        recordLikesDtoMapper = new RecordLikesDtoMapperImpl();
+        userLikesDtoMapper = new UserLikesDtoMapperImpl();
         gson = new Gson();
     }
 
@@ -46,12 +52,12 @@ public class LikeServlet extends HttpServlet {
         this.likeService = likeService;
     }
 
-    public void setRecordDtoMapper(RecordDtoMapper recordDtoMapper) {
-        this.recordDtoMapper = recordDtoMapper;
+    public void setRecordLikesDtoMapper(RecordLikesDtoMapper recordLikesDtoMapper) {
+        this.recordLikesDtoMapper = recordLikesDtoMapper;
     }
 
-    public void setUserDtoMapper(UserDtoMapper userDtoMapper) {
-        this.userDtoMapper = userDtoMapper;
+    public void setUserLikesDtoMapper(UserLikesDtoMapper userLikesDtoMapper) {
+        this.userLikesDtoMapper = userLikesDtoMapper;
     }
 
     @Override
@@ -61,19 +67,17 @@ public class LikeServlet extends HttpServlet {
         PrintWriter printWriter = resp.getWriter();
         if (query != null && req.getParameter("userId") != null) {
             UUID id = UUID.fromString(req.getParameter("userId"));
-            List<RecordEntity> recordEntities = likeService.getLikesByUser(id);
-            List<RecordOutcomingShortDto> records = recordEntities
-                    .stream().map(recordDtoMapper::outComingShortRecordMap).toList();
-            JsonElement jsonRecord = gson.toJsonTree(records);
+            UserLikes likesByUser = likeService.getLikesByUser(id);
+            UserLikesDto recordsThatLikes = userLikesDtoMapper.map(likesByUser);
+            JsonElement jsonRecord = gson.toJsonTree(recordsThatLikes);
             String recordString = gson.toJson(jsonRecord);
             printWriter.write(recordString);
 
         } else if (query != null && req.getParameter("recordId") != null) {
             UUID id = UUID.fromString(req.getParameter("recordId"));
-            List<UserEntity> userEntities = likeService.getLikesByRecord(id);
-            List<UserOutcomingShortDto> users = userEntities
-                    .stream().map(userDtoMapper::outComingShortUserMap).toList();
-            JsonElement jsonUsers = gson.toJsonTree(users);
+            RecordLikes likesByRecord = likeService.getLikesByRecord(id);
+            RecordLikesDto usersThatLikes = recordLikesDtoMapper.map(likesByRecord);
+            JsonElement jsonUsers = gson.toJsonTree(usersThatLikes);
             String usersString = gson.toJson(jsonUsers);
             printWriter.write(usersString);
         } else {

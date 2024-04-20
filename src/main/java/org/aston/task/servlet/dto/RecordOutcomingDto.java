@@ -9,11 +9,11 @@ public class RecordOutcomingDto {
 
     private String text;
 
-    private List<String> likes;
+    private RecordLikesDto likes;
 
     private String authorId;
 
-    private String tag;
+    private List<String> tag;
 
     public RecordOutcomingDto() {
 
@@ -43,11 +43,11 @@ public class RecordOutcomingDto {
         this.text = text;
     }
 
-    public List<String> getLikes() {
+    public RecordLikesDto getLikes() {
         return likes;
     }
 
-    public void setLikes(List<String> likes) {
+    public void setLikes(RecordLikesDto likes) {
         this.likes = likes;
     }
 
@@ -59,11 +59,11 @@ public class RecordOutcomingDto {
         this.authorId = authorId;
     }
 
-    public String getTag() {
+    public List<String> getTag() {
         return tag;
     }
 
-    public void setTag(String tag) {
+    public void setTag(List<String> tag) {
         this.tag = tag;
     }
 }

@@ -1,6 +1,7 @@
 package org.aston.task.service.impl;
 
 import org.aston.task.model.UserEntity;
+import org.aston.task.model.UserLikes;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.RecordEntityRepository;
 import org.aston.task.repository.UserEntityRepository;
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
         user.setId(uuid);
         UserEntity userEntity = userEntityRepository.save(user);
         userEntity.setRecords(new ArrayList<>());
-        userEntity.setLikes(new ArrayList<>());
+        userEntity.setUserLikes(new UserLikes());
         return userEntity;
     }
 
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService {
         userEntityRepository.check(id);
         UserEntity userEntity = userEntityRepository.findById(id);
         userEntity.setRecords(recordEntityRepository.findRecordByAuthorId(id));
-        userEntity.setLikes(likeRepository.findLikesByUserId(id));
+        userEntity.setUserLikes(likeRepository.findLikesByUserId(id));
         return userEntity;
     }
 
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
         userEntityRepository.check(id);
         UserEntity userEntity = userEntityRepository.update(user, id);
         userEntity.setRecords(recordEntityRepository.findRecordByAuthorId(id));
-        userEntity.setLikes(likeRepository.findLikesByUserId(id));
+        userEntity.setUserLikes(likeRepository.findLikesByUserId(id));
         return userEntity;
     }
 
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
         List<UserEntity> userEntities = userEntityRepository.findAll();
         userEntities.forEach(userEntity ->
                 userEntity.setRecords(recordEntityRepository.findRecordByAuthorId(userEntity.getId())));
-        userEntities.forEach(userEntity -> userEntity.setLikes(likeRepository.findLikesByUserId(userEntity.getId())));
+        userEntities.forEach(userEntity -> userEntity.setUserLikes(likeRepository.findLikesByUserId(userEntity.getId())));
         return userEntities;
     }
 }

@@ -19,10 +19,6 @@ public class RecordResultSetMapperImpl implements RecordResultSetMapper {
         recordEntity.setAuthor(userEntity);
         recordEntity.setTitle(resultSet.getString("title"));
         recordEntity.setText(resultSet.getString("text"));
-        TagEntity tag = new TagEntity();
-        tag.setId(resultSet.getInt("tag_id"));
-        tag.setName(resultSet.getString("tag_name"));
-        recordEntity.setTag(tag);
         return recordEntity;
     }
 }

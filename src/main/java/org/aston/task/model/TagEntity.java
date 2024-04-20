@@ -6,6 +6,14 @@ public class TagEntity {
 
     private String name;
 
+    public TagEntity() {
+
+    }
+
+    public TagEntity(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

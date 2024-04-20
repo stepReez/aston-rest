@@ -4,7 +4,9 @@ import org.aston.task.db.ConnectionManager;
 import org.aston.task.db.ConnectionManagerImpl;
 import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.RecordLikes;
 import org.aston.task.model.UserEntity;
+import org.aston.task.model.UserLikes;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.mapper.RecordResultSetMapper;
 import org.aston.task.repository.mapper.UserResultSetMapper;
@@ -67,28 +69,29 @@ public class LikeRepositoryImpl implements LikeRepository {
     }
 
     @Override
-    public List<RecordEntity> findLikesByUserId(UUID userId) {
+    public UserLikes findLikesByUserId(UUID userId) {
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM records " +
-                     "FULL OUTER JOIN  public.likes l on records.record_id = l.record_id " +
-                     "LEFT JOIN public.tags t on records.tag_id = t.tag_id " +
+                     "FULL OUTER JOIN likes l on records.record_id = l.record_id " +
                      "WHERE l.user_id = ?")) {
 
             preparedStatement.setString(1, userId.toString());
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            ArrayList<RecordEntity> recordEntities = new ArrayList<>();
+            ArrayList<UUID> uuids = new ArrayList<>();
             while (resultSet.next()) {
-                recordEntities.add(recordResultSetMapper.map(resultSet));
+                uuids.add(UUID.fromString(resultSet.getString("record_id")));
             }
-            return recordEntities;
+            UserLikes userLikes = new UserLikes();
+            userLikes.setUserLikes(uuids);
+            return userLikes;
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException();
         }
     }
 
     @Override
-    public List<UserEntity> findLikesByRecordId(UUID recordId) {
+    public RecordLikes findLikesByRecordId(UUID recordId) {
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users " +
                      "FULL OUTER JOIN public.likes l on users.user_id = l.user_id " +
@@ -97,11 +100,13 @@ public class LikeRepositoryImpl implements LikeRepository {
             preparedStatement.setString(1, recordId.toString());
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            ArrayList<UserEntity> userEntities = new ArrayList<>();
+            ArrayList<UUID> uuids = new ArrayList<>();
             while (resultSet.next()) {
-                userEntities.add(userResultSetMapper.map(resultSet));
+                uuids.add(UUID.fromString(resultSet.getString("user_id")));
             }
-            return userEntities;
+            RecordLikes recordLikes = new RecordLikes();
+            recordLikes.setRecordLikes(uuids);
+            return recordLikes;
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException();
         }

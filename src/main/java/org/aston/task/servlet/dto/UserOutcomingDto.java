@@ -10,13 +10,13 @@ public class UserOutcomingDto {
 
     private List<String> recordsId;
 
-    private List<String> likes;
+    private UserLikesDto likes;
 
     public UserOutcomingDto() {
 
     }
 
-    public UserOutcomingDto(String id, String name, List<String> recordsId, List<String> likes) {
+    public UserOutcomingDto(String id, String name, List<String> recordsId, UserLikesDto likes) {
         this.id = id;
         this.name = name;
         this.recordsId = recordsId;
@@ -47,11 +47,11 @@ public class UserOutcomingDto {
         this.recordsId = recordsId;
     }
 
-    public List<String> getLikes() {
+    public UserLikesDto getLikes() {
         return likes;
     }
 
-    public void setLikes(List<String> likes) {
+    public void setLikes(UserLikesDto likes) {
         this.likes = likes;
     }
 }
