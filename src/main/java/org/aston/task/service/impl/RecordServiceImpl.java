@@ -12,7 +12,6 @@ import org.aston.task.repository.impl.TagEntityRepositoryImpl;
 import org.aston.task.repository.impl.UserEntityRepositoryImpl;
 import org.aston.task.service.RecordService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,11 +1,14 @@
 package org.aston.task.service.impl;
 
 import org.aston.task.model.TagEntity;
+import org.aston.task.repository.RecordEntityRepository;
 import org.aston.task.repository.TagRepository;
+import org.aston.task.repository.impl.RecordEntityRepositoryImpl;
 import org.aston.task.repository.impl.TagEntityRepositoryImpl;
 import org.aston.task.service.TagService;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TagServiceImpl implements TagService {
 

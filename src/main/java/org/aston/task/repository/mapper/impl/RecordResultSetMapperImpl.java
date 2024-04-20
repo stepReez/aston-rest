@@ -1,7 +1,6 @@
 package org.aston.task.repository.mapper.impl;
 
 import org.aston.task.model.RecordEntity;
-import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.repository.mapper.RecordResultSetMapper;
 

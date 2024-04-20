@@ -86,7 +86,7 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
             preparedStatement.setString(3, recordEntity.getTitle());
             preparedStatement.setString(4, recordEntity.getText());
             preparedStatement.execute();
-            if (!recordEntity.getTag().isEmpty()) {
+            if (recordEntity.getTag() != null) {
                 recordEntity.getTag().forEach(x -> addTag(x.getId(), recordEntity.getId()));
             }
             return findById(recordEntity.getId());
@@ -106,7 +106,7 @@ public class RecordEntityRepositoryImpl implements RecordEntityRepository {
             preparedStatement.setString(2, recordEntity.getText());
             preparedStatement.setString(3, uuid.toString());
             preparedStatement.execute();
-            if (!recordEntity.getTag().isEmpty()) {
+            if (recordEntity.getTag() != null) {
                 recordEntity.getTag().forEach(x -> addTag(x.getId(), recordEntity.getId()));
             }
             return findById(uuid);

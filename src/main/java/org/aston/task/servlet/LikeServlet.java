@@ -9,25 +9,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aston.task.exceptions.BadRequestException;
 import org.aston.task.model.RecordLikes;
-import org.aston.task.model.UserEntity;
 import org.aston.task.model.UserLikes;
 import org.aston.task.service.LikeService;
 import org.aston.task.service.impl.LikeServiceImpl;
 import org.aston.task.servlet.dto.RecordLikesDto;
-import org.aston.task.servlet.dto.RecordOutcomingShortDto;
 import org.aston.task.servlet.dto.UserLikesDto;
-import org.aston.task.servlet.dto.UserOutcomingShortDto;
-import org.aston.task.servlet.mapper.RecordDtoMapper;
 import org.aston.task.servlet.mapper.RecordLikesDtoMapper;
-import org.aston.task.servlet.mapper.UserDtoMapper;
 import org.aston.task.servlet.mapper.UserLikesDtoMapper;
 import org.aston.task.servlet.mapper.impl.RecordLikesDtoMapperImpl;
-import org.aston.task.servlet.mapper.impl.UserDtoMapperImpl;
 import org.aston.task.servlet.mapper.impl.UserLikesDtoMapperImpl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.UUID;
 
 @WebServlet(name = "likes", value = "/record/likes")

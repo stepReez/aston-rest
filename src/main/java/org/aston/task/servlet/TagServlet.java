@@ -2,7 +2,6 @@ package org.aston.task.servlet;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import org.aston.task.servlet.mapper.impl.TagDtoMapperImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @WebServlet(name = "tag", value = "/tag")
@@ -46,7 +44,7 @@ public class TagServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
         PrintWriter printWriter = resp.getWriter();
         List<TagEntity> tagEntities = tagService.getAllTags();
@@ -60,7 +58,7 @@ public class TagServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
         String tagString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
@@ -70,7 +68,7 @@ public class TagServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("text/html");
         String query = req.getQueryString();
         if (query != null && req.getParameter("id") != null) {

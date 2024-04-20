@@ -1,14 +1,11 @@
 package org.aston.task.service.impl;
 
-import org.aston.task.model.RecordEntity;
 import org.aston.task.model.RecordLikes;
-import org.aston.task.model.UserEntity;
 import org.aston.task.model.UserLikes;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.impl.LikeRepositoryImpl;
 import org.aston.task.service.LikeService;
 
-import java.util.List;
 import java.util.UUID;
 
 public class LikeServiceImpl implements LikeService {

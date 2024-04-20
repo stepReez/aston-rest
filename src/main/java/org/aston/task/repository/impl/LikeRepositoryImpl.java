@@ -3,9 +3,7 @@ package org.aston.task.repository.impl;
 import org.aston.task.db.ConnectionManager;
 import org.aston.task.db.ConnectionManagerImpl;
 import org.aston.task.exceptions.NotFoundException;
-import org.aston.task.model.RecordEntity;
 import org.aston.task.model.RecordLikes;
-import org.aston.task.model.UserEntity;
 import org.aston.task.model.UserLikes;
 import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.mapper.RecordResultSetMapper;
@@ -18,7 +16,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class LikeRepositoryImpl implements LikeRepository {

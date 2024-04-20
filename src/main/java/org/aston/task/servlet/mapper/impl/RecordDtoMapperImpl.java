@@ -2,7 +2,6 @@ package org.aston.task.servlet.mapper.impl;
 
 import org.aston.task.model.RecordEntity;
 import org.aston.task.model.TagEntity;
-import org.aston.task.model.UserEntity;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordLikesDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
