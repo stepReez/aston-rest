@@ -1,13 +1,5 @@
 package org.aston.task.servlet;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.aston.task.exceptions.BadRequestException;
 import org.aston.task.model.RecordEntity;
 import org.aston.task.service.RecordService;
 import org.aston.task.service.impl.RecordServiceImpl;
@@ -15,6 +7,8 @@ import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
 import org.aston.task.servlet.mapper.impl.RecordDtoMapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,19 +16,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "record", value = "/record")
-public class RecordServlet extends HttpServlet {
+@RestController
+@RequestMapping("/record")
+public class RecordServlet {
 
     private RecordService recordService;
 
     private RecordDtoMapper recordDtoMapper;
 
-    private final Gson gson;
-
-    public RecordServlet() {
-        recordService = new RecordServiceImpl();
-        recordDtoMapper = new RecordDtoMapperImpl();
-        gson = new Gson();
+    @Autowired
+    public RecordServlet(RecordService recordService, RecordDtoMapper recordDtoMapper) {
+        this.recordService = recordService;
+        this.recordDtoMapper = recordDtoMapper;
     }
 
     public void setRecordService(RecordService recordService) {
@@ -45,89 +38,44 @@ public class RecordServlet extends HttpServlet {
         this.recordDtoMapper = recordDtoMapper;
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        String query = req.getQueryString();
-        PrintWriter printWriter = resp.getWriter();
-        if (query != null && req.getParameter("id") != null) {
-            UUID id = UUID.fromString(req.getParameter("id"));
-            RecordEntity recordEntity = recordService.findRecordById(id);
-            RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(recordEntity);
-
-            JsonElement jsonRecord = gson.toJsonTree(recordOutcomingDto);
-            String recordString = gson.toJson(jsonRecord);
-
-            printWriter.write(recordString);
-
-        } else if (query == null) {
-            List<RecordEntity> recordEntities = recordService.findAll();
-            List<RecordOutcomingDto> records = recordEntities.stream().map(recordDtoMapper::outComingRecordMap).toList();
-            JsonElement jsonRecord = gson.toJsonTree(records);
-            String recordString = gson.toJson(jsonRecord);
-            printWriter.write(recordString);
-        } else {
-            throw new BadRequestException("Bad request: " + query);
-        }
-        printWriter.close();
+    @GetMapping
+    public List<RecordOutcomingDto> getAll() {
+        List<RecordEntity> recordEntities = recordService.findAll();
+        return recordEntities.stream().map(recordDtoMapper::outComingRecordMap).toList();
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        String query = req.getQueryString();
-
-        if (query != null && req.getParameter("userId") != null) {
-            String recordString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            UUID id = UUID.fromString(req.getParameter("userId"));
-            RecordIncomingDto recordIncomingDto = gson.fromJson(recordString, RecordIncomingDto.class);
-            RecordEntity recordEntity = recordService.createRecord(
-                    recordDtoMapper.incomingRecordMap(recordIncomingDto), id);
-
-            RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(recordEntity);
-            JsonElement jsonRecord = gson.toJsonTree(recordOutcomingDto);
-            String recordOutString = gson.toJson(jsonRecord);
-
-            PrintWriter printWriter = resp.getWriter();
-            printWriter.write(recordOutString);
-            printWriter.close();
-        } else {
-            throw new BadRequestException("Bad request: " + query);
-        }
+    @GetMapping("/{id}")
+    public RecordOutcomingDto getRecordById(@PathVariable("id") UUID id) {
+        RecordEntity recordEntity = recordService.findRecordById(id);
+        return recordDtoMapper.outComingRecordMap(recordEntity);
     }
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        String query = req.getQueryString();
-        if (query != null && req.getParameter("id") != null) {
-            String recordString = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            UUID id = UUID.fromString(req.getParameter("id"));
+    @GetMapping("/tag")
+    public List<RecordOutcomingDto> getByTag(@RequestParam("tagId") int tagId) {
+        List<RecordEntity> recordEntities = recordService.findRecordsByTagId(tagId);
+        return recordEntities.stream().map(recordDtoMapper::outComingRecordMap).toList();
+    }
 
-            RecordIncomingDto recordIncomingDto = gson.fromJson(recordString, RecordIncomingDto.class);
+    @PostMapping
+    public RecordOutcomingDto createRecord(@RequestBody RecordIncomingDto recordIncomingDto,
+                       @RequestParam("userId") UUID userId) {
+
+            RecordEntity recordEntity =
+                    recordService.createRecord(recordDtoMapper.incomingRecordMap(recordIncomingDto), userId);
+            return recordDtoMapper.outComingRecordMap(recordEntity);
+    }
+
+    @PutMapping
+    public RecordOutcomingDto updateRecord(@RequestBody RecordIncomingDto recordIncomingDto,
+                                           @RequestParam("id") UUID id) {
+
             RecordEntity recordEntity = recordService.updateRecord(recordDtoMapper.incomingRecordMap(recordIncomingDto), id);
 
-            RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(recordEntity);
-            JsonElement jsonRecord = gson.toJsonTree(recordOutcomingDto);
-            String recordOutString = gson.toJson(jsonRecord);
-
-            PrintWriter printWriter = resp.getWriter();
-            printWriter.write(recordOutString);
-            printWriter.close();
-        } else {
-            throw new BadRequestException("Bad request: " + query);
-        }
+            return recordDtoMapper.outComingRecordMap(recordEntity);
     }
 
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        String query = req.getQueryString();
-        if (query != null && req.getParameter("id") != null) {
-            UUID id = UUID.fromString(req.getParameter("id"));
+    @DeleteMapping("/{id}")
+    public void deleteRecord(@PathVariable("id") UUID id) {
             recordService.deleteRecord(id);
-        } else {
-            throw new BadRequestException("Bad request: " + query);
-        }
     }
 }

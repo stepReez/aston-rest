@@ -1,36 +1,35 @@
 package org.aston.task.service.impl;
 
+import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.RecordEntity;
-import org.aston.task.model.RecordLikes;
-import org.aston.task.repository.LikeRepository;
 import org.aston.task.repository.RecordEntityRepository;
-import org.aston.task.repository.TagRepository;
+import org.aston.task.repository.TagEntityRepository;
 import org.aston.task.repository.UserEntityRepository;
-import org.aston.task.repository.impl.LikeRepositoryImpl;
-import org.aston.task.repository.impl.RecordEntityRepositoryImpl;
-import org.aston.task.repository.impl.TagEntityRepositoryImpl;
-import org.aston.task.repository.impl.UserEntityRepositoryImpl;
 import org.aston.task.service.RecordService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class RecordServiceImpl implements RecordService {
 
     private RecordEntityRepository recordEntityRepository;
 
     private UserEntityRepository userEntityRepository;
 
-    private LikeRepository likeRepository;
+    private TagEntityRepository tagEntityRepository;
 
-    private TagRepository tagRepository;
-
-    public RecordServiceImpl() {
-        recordEntityRepository = new RecordEntityRepositoryImpl();
-        userEntityRepository = new UserEntityRepositoryImpl();
-        likeRepository = new LikeRepositoryImpl();
-        tagRepository = new TagEntityRepositoryImpl();
+    @Autowired
+    public RecordServiceImpl(RecordEntityRepository recordEntityRepository, UserEntityRepository userEntityRepository,
+                             TagEntityRepository tagEntityRepository) {
+        this.recordEntityRepository = recordEntityRepository;
+        this.userEntityRepository = userEntityRepository;
+        this.tagEntityRepository = tagEntityRepository;
     }
+
+    public RecordServiceImpl(){}
 
     public void setRecordEntityRepository(RecordEntityRepository recordEntityRepository) {
         this.recordEntityRepository = recordEntityRepository;
@@ -40,54 +39,47 @@ public class RecordServiceImpl implements RecordService {
         this.userEntityRepository = userEntityRepository;
     }
 
-    public void setLikeRepository(LikeRepository likeRepository) {
-        this.likeRepository = likeRepository;
-    }
-
-    public void setTagRepository(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
+    public void setTagRepository(TagEntityRepository tagEntityRepository) {
+        this.tagEntityRepository = tagEntityRepository;
     }
 
     @Override
     public RecordEntity createRecord(RecordEntity recordEntity, UUID userId) {
-        recordEntity.setId(UUID.randomUUID());
-        recordEntity.setAuthor(userEntityRepository.findById(userId));
+        recordEntity.setAuthor(userEntityRepository.findById(userId).orElseThrow(NotFoundException::new));
         RecordEntity record = recordEntityRepository.save(recordEntity);
-        record.setLikes(new RecordLikes());
-        record.setTag(tagRepository.getTagsByRecord(recordEntity.getId()));
+        record.setTags(tagEntityRepository.findByRecordId(recordEntity.getId()));
         return record;
     }
 
     @Override
     public RecordEntity findRecordById(UUID id) {
-        recordEntityRepository.check(id);
-        RecordEntity recordEntity = recordEntityRepository.findById(id);
-        recordEntity.setLikes(likeRepository.findLikesByRecordId(id));
-        recordEntity.setTag(tagRepository.getTagsByRecord(id));
+        RecordEntity recordEntity = recordEntityRepository.findById(id).orElseThrow(NotFoundException::new);
+        recordEntity.setTags(tagEntityRepository.findByRecordId(id));
         return recordEntity;
     }
 
     @Override
     public RecordEntity updateRecord(RecordEntity recordEntity, UUID id) {
-        recordEntityRepository.check(id);
-        RecordEntity record = recordEntityRepository.update(recordEntity, id);
-        record.setLikes(likeRepository.findLikesByRecordId(id));
-        record.setTag(tagRepository.getTagsByRecord(recordEntity.getId()));
+        recordEntity.setId(id);
+        RecordEntity record = recordEntityRepository.save(recordEntity);
+        record.setTags(tagEntityRepository.findByRecordId(recordEntity.getId()));
         return record;
     }
 
     @Override
-    public boolean deleteRecord(UUID id) {
-        recordEntityRepository.check(id);
-        return recordEntityRepository.deleteById(id);
+    public void deleteRecord(UUID id) {
+        recordEntityRepository.deleteById(id);
+    }
+
+    @Override
+    public List<RecordEntity> findRecordsByTagId(int id) {
+        return recordEntityRepository.findByTagId(id);
     }
 
     @Override
     public List<RecordEntity> findAll() {
         List<RecordEntity> recordEntities = recordEntityRepository.findAll();
-        recordEntities.forEach(recordEntity ->
-                recordEntity.setLikes(likeRepository.findLikesByRecordId(recordEntity.getId())));
-        recordEntities.forEach(recordEntity -> recordEntity.setTag(tagRepository.getTagsByRecord(recordEntity.getId())));
+        recordEntities.forEach(recordEntity -> recordEntity.setTags(tagEntityRepository.findByRecordId(recordEntity.getId())));
         return recordEntities;
     }
 }

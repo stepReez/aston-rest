@@ -2,7 +2,6 @@ package org.aston.task.servlet.mapper;
 
 import org.aston.task.model.RecordEntity;
 import org.aston.task.model.UserEntity;
-import org.aston.task.model.UserLikes;
 import org.aston.task.servlet.dto.UserIncomingDto;
 import org.aston.task.servlet.dto.UserOutcomingDto;
 import org.aston.task.servlet.dto.UserOutcomingShortDto;
@@ -56,11 +55,7 @@ class UserDtoMapperTest {
         likes.add(recordEntity1.getId());
         likes.add(recordEntity2.getId());
 
-        UserLikes userLikes = new UserLikes();
-        userLikes.setUserLikes(likes);
-
         userEntity.setRecords(usersRecords);
-        userEntity.setUserLikes(userLikes);
 
         UserOutcomingDto userOutcomingDto = userDtoMapper.outComingUserMap(userEntity);
         Assertions.assertEquals(userId.toString(), userOutcomingDto.getId(), "Id must be equal " + userId);
@@ -68,9 +63,6 @@ class UserDtoMapperTest {
         Assertions.assertEquals(1, userOutcomingDto.getRecordsId().size(), "Size must be equal " + 1);
         Assertions.assertEquals(recordId1.toString(), userOutcomingDto.getRecordsId().get(0),
                 "Id must bew equal " + recordId1);
-        Assertions.assertEquals(2, userOutcomingDto.getLikes().getUserLikes().size(), "Size must be equal " + 2);
-        Assertions.assertEquals(recordId1.toString(), userOutcomingDto.getLikes().getUserLikes().get(0), "Id must be equal " + recordId1);
-        Assertions.assertEquals(recordId2.toString(), userOutcomingDto.getLikes().getUserLikes().get(1), "Id must be equal " + recordId2);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package org.aston.task.servlet.mapper;
 
 import org.aston.task.model.RecordEntity;
-import org.aston.task.model.RecordLikes;
 import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.servlet.dto.RecordIncomingDto;
@@ -50,16 +49,12 @@ class RecordDtoMapperTest {
         recordLikesUUID.add(user1.getId());
         recordLikesUUID.add(user2.getId());
 
-        RecordLikes recordLikes = new RecordLikes();
-        recordLikes.setRecordLikes(recordLikesUUID);
-
         RecordEntity recordEntity = new RecordEntity();
         UUID recordId = UUID.randomUUID();
         recordEntity.setId(recordId);
         recordEntity.setTitle(title);
         recordEntity.setText(text);
         recordEntity.setAuthor(user1);
-        recordEntity.setLikes(recordLikes);
 
         TagEntity tag = new TagEntity();
         tag.setId(1);
@@ -67,7 +62,7 @@ class RecordDtoMapperTest {
 
         List<TagEntity> tagEntities = new ArrayList<>();
         tagEntities.add(tag);
-        recordEntity.setTag(tagEntities);
+        recordEntity.setTags(tagEntities);
 
         RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(recordEntity);
 
@@ -75,9 +70,6 @@ class RecordDtoMapperTest {
         Assertions.assertEquals(title, recordOutcomingDto.getTitle(), "Title must be equal " + title);
         Assertions.assertEquals(text, recordOutcomingDto.getText(), "Text must be equal " + text);
         Assertions.assertEquals(userId1.toString(), recordOutcomingDto.getAuthorId(), "Author id must be equal " + userId1);
-        Assertions.assertEquals(2, recordOutcomingDto.getLikes().getRecordLikes().size(), "Size must be equal " + 2);
-        Assertions.assertEquals(userId1.toString(), recordOutcomingDto.getLikes().getRecordLikes().get(0), "Id must be equal " + userId1);
-        Assertions.assertEquals(userId2.toString(), recordOutcomingDto.getLikes().getRecordLikes().get(1), "Id must be equal " + userId2);
     }
 
     @Test
@@ -107,7 +99,7 @@ class RecordDtoMapperTest {
 
         List<TagEntity> tagEntities = new ArrayList<>();
         tagEntities.add(tag);
-        recordEntity.setTag(tagEntities);
+        recordEntity.setTags(tagEntities);
 
         RecordOutcomingShortDto recordOutcomingShortDto = recordDtoMapper.outComingShortRecordMap(recordEntity);
 

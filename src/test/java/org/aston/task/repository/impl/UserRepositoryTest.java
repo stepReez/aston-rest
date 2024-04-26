@@ -19,7 +19,7 @@ public class UserRepositoryTest {
             new PostgreSQLContainer<>("postgres:14-alpine")
                     .withDatabaseName("test")
                     .withUsername("test")
-                    .withInitScript("db/schema.sql")
+                    .withInitScript("schema.sql")
                     .withPassword("test");
 
     UserEntityRepositoryImpl userEntityRepository;

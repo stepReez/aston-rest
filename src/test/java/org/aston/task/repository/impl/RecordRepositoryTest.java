@@ -5,7 +5,10 @@ import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.RecordEntity;
 import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
+import org.aston.task.repository.RecordEntityRepository;
+import org.aston.task.repository.TagEntityRepository;
 import org.aston.task.repository.TagRepository;
+import org.aston.task.repository.UserEntityRepository;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -23,14 +26,14 @@ public class RecordRepositoryTest {
             new PostgreSQLContainer<>("postgres:14-alpine")
                     .withDatabaseName("test")
                     .withUsername("test")
-                    .withInitScript("db/schema.sql")
+                    .withInitScript("schema.sql")
                     .withPassword("test");
 
-    RecordEntityRepositoryImpl recordEntityRepository;
+    RecordEntityRepository recordEntityRepository;
 
-    UserEntityRepositoryImpl userEntityRepository;
+    UserEntityRepository userEntityRepository;
 
-    TagEntityRepositoryImpl tagRepository;
+    TagEntityRepository tagRepository;
 
     UserEntity user;
 
@@ -73,10 +76,10 @@ public class RecordRepositoryTest {
         record.setAuthor(user);
         List<TagEntity> tagEntities = new ArrayList<>();
         tagEntities.add(tag);
-        record.setTag(tagEntities);
+        record.setTags(tagEntities);
 
         container.start();
-        recordEntityRepository = new RecordEntityRepositoryImpl();
+        recordEntityRepository = new RecordEntityRepository();
         userEntityRepository = new UserEntityRepositoryImpl();
         tagRepository = new TagEntityRepositoryImpl();
 

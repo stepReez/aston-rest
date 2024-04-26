@@ -9,8 +9,6 @@ public class RecordOutcomingDto {
 
     private String text;
 
-    private RecordLikesDto likes;
-
     private String authorId;
 
     private List<String> tag;
@@ -41,14 +39,6 @@ public class RecordOutcomingDto {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public RecordLikesDto getLikes() {
-        return likes;
-    }
-
-    public void setLikes(RecordLikesDto likes) {
-        this.likes = likes;
     }
 
     public String getAuthorId() {

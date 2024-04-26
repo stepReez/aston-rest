@@ -1,40 +1,47 @@
 package org.aston.task.service.impl;
 
+import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.TagEntity;
-import org.aston.task.repository.RecordEntityRepository;
-import org.aston.task.repository.TagRepository;
-import org.aston.task.repository.impl.RecordEntityRepositoryImpl;
-import org.aston.task.repository.impl.TagEntityRepositoryImpl;
+import org.aston.task.repository.TagEntityRepository;
 import org.aston.task.service.TagService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
+@Service
 public class TagServiceImpl implements TagService {
 
-    private TagRepository tagRepository;
+    private TagEntityRepository tagEntityRepository;
 
-    public TagServiceImpl() {
-        tagRepository = new TagEntityRepositoryImpl();
+    @Autowired
+    public TagServiceImpl(TagEntityRepository tagEntityRepository) {
+        this.tagEntityRepository = tagEntityRepository;
     }
 
-    public void setTagRepository(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
+    public TagServiceImpl(){}
+
+    public void setTagRepository(TagEntityRepository tagEntityRepository) {
+        this.tagEntityRepository = tagEntityRepository;
     }
 
     @Override
-    public void createTag(TagEntity tag) {
-        tagRepository.addTag(tag.getName());
+    public TagEntity createTag(TagEntity tag) {
+        return tagEntityRepository.save(tag);
+    }
+
+    @Override
+    public TagEntity findTagById(int id) {
+        return tagEntityRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override
     public void removeTag(int id) {
-        tagRepository.check(id);
-        tagRepository.removeTag(id);
+        tagEntityRepository.deleteById(id);
     }
 
     @Override
     public List<TagEntity> getAllTags() {
-        return tagRepository.getAllTags();
+        return tagEntityRepository.findAll();
     }
 }

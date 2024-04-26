@@ -12,7 +12,7 @@ public interface UserService {
 
     UserEntity updateUser(UserEntity user, UUID id);
 
-    boolean deleteUser(UUID id);
+    void deleteUser(UUID id);
 
     List<UserEntity> findAll();
 }

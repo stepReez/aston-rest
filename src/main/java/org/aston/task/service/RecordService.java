@@ -13,7 +13,9 @@ public interface RecordService {
 
     RecordEntity updateRecord(RecordEntity recordEntity, UUID id);
 
-    boolean deleteRecord(UUID id);
+    void deleteRecord(UUID id);
+
+    List<RecordEntity> findRecordsByTagId(int id);
 
     List<RecordEntity> findAll();
 }

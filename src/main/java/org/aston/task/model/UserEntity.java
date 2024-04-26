@@ -1,16 +1,26 @@
 package org.aston.task.model;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+
+import java.sql.Types;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "users")
 public class UserEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(Types.VARCHAR)
+    @Column(name = "user_id")
     private UUID id;
 
+    @Column(name = "user_name")
     private String name;
 
+    @OneToMany(mappedBy = "author")
     private List<RecordEntity> records;
-
-    private UserLikes userLikes;
 
     public UUID getId() {
         return id;
@@ -34,13 +44,5 @@ public class UserEntity {
 
     public void setRecords(List<RecordEntity> records) {
         this.records = records;
-    }
-
-    public UserLikes getUserLikes() {
-        return userLikes;
-    }
-
-    public void setUserLikes(UserLikes userLikes) {
-        this.userLikes = userLikes;
     }
 }

@@ -10,17 +10,14 @@ public class UserOutcomingDto {
 
     private List<String> recordsId;
 
-    private UserLikesDto likes;
-
     public UserOutcomingDto() {
 
     }
 
-    public UserOutcomingDto(String id, String name, List<String> recordsId, UserLikesDto likes) {
+    public UserOutcomingDto(String id, String name, List<String> recordsId) {
         this.id = id;
         this.name = name;
         this.recordsId = recordsId;
-        this.likes = likes;
     }
 
     public String getId() {
@@ -45,13 +42,5 @@ public class UserOutcomingDto {
 
     public void setRecordsId(List<String> recordsId) {
         this.recordsId = recordsId;
-    }
-
-    public UserLikesDto getLikes() {
-        return likes;
-    }
-
-    public void setLikes(UserLikesDto likes) {
-        this.likes = likes;
     }
 }

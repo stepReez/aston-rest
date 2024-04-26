@@ -12,7 +12,6 @@ import org.testcontainers.junit.jupiter.Container;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 public class TagRepositoryTest {
@@ -21,7 +20,7 @@ public class TagRepositoryTest {
             new PostgreSQLContainer<>("postgres:14-alpine")
                     .withDatabaseName("test")
                     .withUsername("test")
-                    .withInitScript("db/schema.sql")
+                    .withInitScript("schema.sql")
                     .withPassword("test");
 
     TagEntityRepositoryImpl tagRepository = new TagEntityRepositoryImpl();

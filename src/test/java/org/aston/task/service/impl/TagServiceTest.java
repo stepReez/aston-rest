@@ -1,7 +1,7 @@
 package org.aston.task.service.impl;
 
 import org.aston.task.model.TagEntity;
-import org.aston.task.repository.TagRepository;
+import org.aston.task.repository.TagEntityRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagServiceMap {
+class TagServiceTest {
     TagServiceImpl tagService;
 
     @BeforeEach
@@ -20,7 +20,7 @@ public class TagServiceMap {
 
     @Test
     void getAllTagsTest() {
-        TagRepository tagRepository = Mockito.mock(TagRepository.class);
+        TagEntityRepository tagRepository = Mockito.mock(TagEntityRepository.class);
         tagService.setTagRepository(tagRepository);
 
         TagEntity tag = new TagEntity();
@@ -33,7 +33,7 @@ public class TagServiceMap {
         tags.add(tag);
 
         Mockito
-                .when(tagRepository.getAllTags())
+                .when(tagRepository.findAll())
                 .thenReturn(tags);
 
         List<TagEntity> tagEntities = tagService.getAllTags();
