@@ -2,19 +2,14 @@ package org.aston.task.servlet;
 
 import org.aston.task.model.RecordEntity;
 import org.aston.task.service.RecordService;
-import org.aston.task.service.impl.RecordServiceImpl;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
-import org.aston.task.servlet.mapper.impl.RecordDtoMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/record")

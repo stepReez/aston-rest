@@ -75,7 +75,7 @@ class UserServletTest {
 
         userOutcomingDto.setId(id);
         userOutcomingDto.setName(name);
-        userOutcomingDto.setRecordsId(new ArrayList<>());
+        userOutcomingDto.setRecords(new ArrayList<>());
     }
 
     @Test

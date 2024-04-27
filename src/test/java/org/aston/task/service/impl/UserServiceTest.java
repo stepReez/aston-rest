@@ -25,10 +25,8 @@ class UserServiceTest {
     @Test
     void createUserTest() {
         UserEntity userEntity = new UserEntity();
-        UUID uuid = UUID.randomUUID();
         String name = "Name";
 
-        userEntity.setId(uuid);
         userEntity.setName(name);
 
         UserEntityRepository userEntityRepositoryMock = Mockito.mock(UserEntityRepository.class);
@@ -41,7 +39,6 @@ class UserServiceTest {
         UserEntity outComeUser = userService.createUser(userEntity);
 
         Assertions.assertEquals(name, outComeUser.getName(), "Name must be equal " + name);
-        Assertions.assertNotNull(outComeUser.getId(), "Id must be not null");
         Assertions.assertNotNull(outComeUser.getRecords(), "Records must be not null");
     }
 

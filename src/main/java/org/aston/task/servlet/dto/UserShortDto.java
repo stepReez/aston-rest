@@ -2,17 +2,11 @@ package org.aston.task.servlet.dto;
 
 import java.util.List;
 
-public class UserOutcomingDto {
+public class UserShortDto {
 
     private String id;
 
     private String name;
-
-    private List<RecordShortDto> records;
-
-    public UserOutcomingDto() {
-
-    }
 
     public String getId() {
         return id;
@@ -28,13 +22,5 @@ public class UserOutcomingDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<RecordShortDto> getRecords() {
-        return records;
-    }
-
-    public void setRecords(List<RecordShortDto> records) {
-        this.records = records;
     }
 }

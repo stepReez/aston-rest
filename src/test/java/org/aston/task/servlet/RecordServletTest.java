@@ -6,6 +6,7 @@ import org.aston.task.model.UserEntity;
 import org.aston.task.service.RecordService;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
+import org.aston.task.servlet.dto.UserShortDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,12 +84,14 @@ class RecordServletTest {
         recordEntity.setTitle(title);
         recordEntity.setText(text);
         recordEntity.setAuthor(new UserEntity());
-        recordEntity.setTags(new ArrayList<>());
+        recordEntity.setTag(new ArrayList<>());
 
         recordOutcomingDto.setId(id);
         recordOutcomingDto.setTitle(title);
         recordOutcomingDto.setText(text);
-        recordOutcomingDto.setAuthorId(authorId);
+        UserShortDto userShortDto = new UserShortDto();
+        userShortDto.setId(authorId);
+        recordOutcomingDto.setAuthor(userShortDto);
         recordOutcomingDto.setTag(new ArrayList<>());
     }
 
@@ -112,7 +115,7 @@ class RecordServletTest {
                 .andExpect(jsonPath("$.id", is(id)))
                 .andExpect(jsonPath("$.title", is(title)))
                 .andExpect(jsonPath("$.text", is(text)))
-                .andExpect(jsonPath("$.authorId", is(authorId)));
+                .andExpect(jsonPath("$.author.id", is(authorId)));
     }
 
     @Test
@@ -131,7 +134,7 @@ class RecordServletTest {
                 .andExpect(jsonPath("$.id", is(id)))
                 .andExpect(jsonPath("$.title", is(title)))
                 .andExpect(jsonPath("$.text", is(text)))
-                .andExpect(jsonPath("$.authorId", is(authorId)));
+                .andExpect(jsonPath("$.author.id", is(authorId)));
     }
 
     @Test
@@ -152,7 +155,7 @@ class RecordServletTest {
                 .andExpect(jsonPath("$[0].id", is(id)))
                 .andExpect(jsonPath("$[0].title", is(title)))
                 .andExpect(jsonPath("$[0].text", is(text)))
-                .andExpect(jsonPath("$[0].authorId", is(authorId)));
+                .andExpect(jsonPath("$[0].author.id", is(authorId)));
     }
 
     @Test
@@ -173,7 +176,7 @@ class RecordServletTest {
                 .andExpect(jsonPath("$[0].id", is(id)))
                 .andExpect(jsonPath("$[0].title", is(title)))
                 .andExpect(jsonPath("$[0].text", is(text)))
-                .andExpect(jsonPath("$[0].authorId", is(authorId)));
+                .andExpect(jsonPath("$[0].author.id", is(authorId)));
     }
 
     @Test
@@ -196,7 +199,7 @@ class RecordServletTest {
                 .andExpect(jsonPath("$.id", is(id)))
                 .andExpect(jsonPath("$.title", is(title)))
                 .andExpect(jsonPath("$.text", is(text)))
-                .andExpect(jsonPath("$.authorId", is(authorId)));
+                .andExpect(jsonPath("$.author.id", is(authorId)));
     }
 
     @Test

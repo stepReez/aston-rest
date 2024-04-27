@@ -47,14 +47,14 @@ public class RecordServiceImpl implements RecordService {
     public RecordEntity createRecord(RecordEntity recordEntity, UUID userId) {
         recordEntity.setAuthor(userEntityRepository.findById(userId).orElseThrow(NotFoundException::new));
         RecordEntity record = recordEntityRepository.save(recordEntity);
-        record.setTags(tagEntityRepository.findByRecordId(recordEntity.getId()));
+        record.setTag(tagEntityRepository.findByRecordId(recordEntity.getId()));
         return record;
     }
 
     @Override
     public RecordEntity findRecordById(UUID id) {
         RecordEntity recordEntity = recordEntityRepository.findById(id).orElseThrow(NotFoundException::new);
-        recordEntity.setTags(tagEntityRepository.findByRecordId(id));
+        recordEntity.setTag(tagEntityRepository.findByRecordId(id));
         return recordEntity;
     }
 
@@ -62,7 +62,7 @@ public class RecordServiceImpl implements RecordService {
     public RecordEntity updateRecord(RecordEntity recordEntity, UUID id) {
         recordEntity.setId(id);
         RecordEntity record = recordEntityRepository.save(recordEntity);
-        record.setTags(tagEntityRepository.findByRecordId(recordEntity.getId()));
+        record.setTag(tagEntityRepository.findByRecordId(recordEntity.getId()));
         return record;
     }
 
@@ -79,7 +79,7 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<RecordEntity> findAll() {
         List<RecordEntity> recordEntities = recordEntityRepository.findAll();
-        recordEntities.forEach(recordEntity -> recordEntity.setTags(tagEntityRepository.findByRecordId(recordEntity.getId())));
+        recordEntities.forEach(recordEntity -> recordEntity.setTag(tagEntityRepository.findByRecordId(recordEntity.getId())));
         return recordEntities;
     }
 }

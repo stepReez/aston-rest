@@ -203,4 +203,49 @@ class RecordServiceTest {
 
         Assertions.assertEquals(2, recordEntityList.size());
     }
+
+    @Test
+    void findByTagIdTest() {
+        List<RecordEntity> recordEntities = new ArrayList<>();
+
+        for (int i = 0; i < 2; i++) {
+            RecordEntity recordEntity = new RecordEntity();
+
+            UUID uuid = UUID.randomUUID();
+            String title = "Title";
+            String text = "Text";
+
+            recordEntity.setId(uuid);
+            recordEntity.setTitle(title);
+            recordEntity.setText(text);
+
+            UserEntity userEntity = new UserEntity();
+            UUID authorId = UUID.randomUUID();
+            userEntity.setId(authorId);
+
+            recordEntity.setAuthor(userEntity);
+            recordEntities.add(recordEntity);
+        }
+
+        RecordEntityRepository recordEntityRepository = Mockito.mock(RecordEntityRepository.class);
+        recordService.setRecordEntityRepository(recordEntityRepository);
+
+        UserEntityRepository userEntityRepository = Mockito.mock(UserEntityRepository.class);
+        recordService.setUserEntityRepository(userEntityRepository);
+
+        TagEntityRepository tagEntityRepository = Mockito.mock(TagEntityRepository.class);
+        recordService.setTagRepository(tagEntityRepository);
+
+        Mockito
+                .when(tagEntityRepository.findByRecordId(Mockito.any()))
+                .thenReturn(new ArrayList<>());
+
+        Mockito
+                .when(recordEntityRepository.findByTagId(1))
+                .thenReturn(recordEntities);
+
+        List<RecordEntity> recordEntityList = recordService.findRecordsByTagId(1);
+
+        Assertions.assertEquals(2, recordEntityList.size());
+    }
 }

@@ -15,7 +15,7 @@ public interface RecordEntityRepository extends JpaRepository<RecordEntity, UUID
     List<RecordEntity> findByAuthorId(UUID authorId);
 
     @Query("SELECT r FROM RecordEntity AS r " +
-            "JOIN r.tags AS t " +
+            "JOIN r.tag AS t " +
             "WHERE t.id = ?1")
     List<RecordEntity> findByTagId(Integer tagId);
 }

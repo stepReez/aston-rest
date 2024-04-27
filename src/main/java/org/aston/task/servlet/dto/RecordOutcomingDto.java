@@ -9,9 +9,9 @@ public class RecordOutcomingDto {
 
     private String text;
 
-    private String authorId;
+    private UserShortDto author;
 
-    private List<String> tag;
+    private List<TagOutcomingDto> tag;
 
     public RecordOutcomingDto() {
 
@@ -41,19 +41,19 @@ public class RecordOutcomingDto {
         this.text = text;
     }
 
-    public String getAuthorId() {
-        return authorId;
+    public UserShortDto getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
+    public void setAuthor(UserShortDto author) {
+        this.author = author;
     }
 
-    public List<String> getTag() {
+    public List<TagOutcomingDto> getTag() {
         return tag;
     }
 
-    public void setTag(List<String> tag) {
+    public void setTag(List<TagOutcomingDto> tag) {
         this.tag = tag;
     }
 }

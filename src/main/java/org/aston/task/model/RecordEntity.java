@@ -28,7 +28,7 @@ public class RecordEntity {
     @JoinTable(name = "tags_records",
     joinColumns = {@JoinColumn(name = "record_id", referencedColumnName = "record_id")},
     inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "tag_id")})
-    private List<TagEntity> tags;
+    private List<TagEntity> tag;
 
     public UUID getId() {
         return id;
@@ -62,11 +62,11 @@ public class RecordEntity {
         this.author = author;
     }
 
-    public List<TagEntity> getTags() {
-        return tags;
+    public List<TagEntity> getTag() {
+        return tag;
     }
 
-    public void setTags(List<TagEntity> tags) {
-        this.tags = tags;
+    public void setTag(List<TagEntity> tag) {
+        this.tag = tag;
     }
 }

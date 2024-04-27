@@ -41,7 +41,7 @@ public class UserServlet {
     public UserOutcomingDto createUser(@RequestBody UserIncomingDto userIncomingDto) {
         UserEntity userEntity = userDtoMapper.incomingUserMap(userIncomingDto);
         UserEntity outComingUser = userService.createUser(userEntity);
-
+        System.out.println(outComingUser.getId());
         return userDtoMapper.outComingUserMap(outComingUser);
     }
 
