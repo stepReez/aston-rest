@@ -4,14 +4,13 @@ import org.aston.task.model.RecordEntity;
 import org.aston.task.model.TagEntity;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
-import org.aston.task.servlet.dto.RecordOutcomingShortDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Component
 public class RecordDtoMapperImpl implements RecordDtoMapper {
     @Override
     public RecordOutcomingDto outComingRecordMap(RecordEntity recordEntity) {
@@ -25,20 +24,6 @@ public class RecordDtoMapperImpl implements RecordDtoMapper {
         tags.forEach(x -> tagsString.add(x.getName()));
         recordOutcomingDto.setTag(tagsString);
         return recordOutcomingDto;
-    }
-
-    @Override
-    public RecordOutcomingShortDto outComingShortRecordMap(RecordEntity recordEntity) {
-        RecordOutcomingShortDto recordOutcomingShortDto = new RecordOutcomingShortDto();
-        recordOutcomingShortDto.setId(recordEntity.getId().toString());
-        recordOutcomingShortDto.setTitle(recordEntity.getTitle());
-        recordOutcomingShortDto.setText(recordEntity.getText());
-        recordOutcomingShortDto.setAuthorId(recordEntity.getAuthor().getId().toString());
-        List<TagEntity> tags = recordEntity.getTags();
-        List<String> tagsString = new ArrayList<>();
-        tags.forEach(x -> tagsString.add(x.getName()));
-        recordOutcomingShortDto.setTag(tagsString);
-        return recordOutcomingShortDto;
     }
 
     @Override

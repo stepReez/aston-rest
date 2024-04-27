@@ -5,7 +5,6 @@ import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
-import org.aston.task.servlet.dto.RecordOutcomingShortDto;
 import org.aston.task.servlet.mapper.impl.RecordDtoMapperImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,42 +69,5 @@ class RecordDtoMapperTest {
         Assertions.assertEquals(title, recordOutcomingDto.getTitle(), "Title must be equal " + title);
         Assertions.assertEquals(text, recordOutcomingDto.getText(), "Text must be equal " + text);
         Assertions.assertEquals(userId1.toString(), recordOutcomingDto.getAuthorId(), "Author id must be equal " + userId1);
-    }
-
-    @Test
-    void recordDtoMapper_outComingRecordShortMapTest() {
-        String title = "Title";
-        String text = "text";
-        UserEntity user1 = new UserEntity();
-        UUID userId1 = UUID.randomUUID();
-        user1.setId(userId1);
-        UserEntity user2 = new UserEntity();
-        UUID userId2 = UUID.randomUUID();
-        user2.setId(userId2);
-        List<UserEntity> userEntities = new ArrayList<>();
-        userEntities.add(user1);
-        userEntities.add(user2);
-
-        RecordEntity recordEntity = new RecordEntity();
-        UUID recordId = UUID.randomUUID();
-        recordEntity.setId(recordId);
-        recordEntity.setTitle(title);
-        recordEntity.setText(text);
-        recordEntity.setAuthor(user1);
-
-        TagEntity tag = new TagEntity();
-        tag.setId(1);
-        tag.setName("name");
-
-        List<TagEntity> tagEntities = new ArrayList<>();
-        tagEntities.add(tag);
-        recordEntity.setTags(tagEntities);
-
-        RecordOutcomingShortDto recordOutcomingShortDto = recordDtoMapper.outComingShortRecordMap(recordEntity);
-
-        Assertions.assertEquals(recordId.toString(), recordOutcomingShortDto.getId(), "Id must be equal " + recordId);
-        Assertions.assertEquals(title, recordOutcomingShortDto.getTitle(), "Title must be equal " + title);
-        Assertions.assertEquals(text, recordOutcomingShortDto.getText(), "Text must be equal " + text);
-        Assertions.assertEquals(userId1.toString(), recordOutcomingShortDto.getAuthorId(), "Author id must be equal " + userId1);
     }
 }

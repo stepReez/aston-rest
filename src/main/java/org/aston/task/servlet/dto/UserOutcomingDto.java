@@ -14,12 +14,6 @@ public class UserOutcomingDto {
 
     }
 
-    public UserOutcomingDto(String id, String name, List<String> recordsId) {
-        this.id = id;
-        this.name = name;
-        this.recordsId = recordsId;
-    }
-
     public String getId() {
         return id;
     }

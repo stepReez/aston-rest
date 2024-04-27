@@ -1,5 +1,6 @@
 package org.aston.task.service.impl;
 
+import org.aston.task.exceptions.NotFoundException;
 import org.aston.task.model.TagEntity;
 import org.aston.task.repository.TagEntityRepository;
 import org.junit.jupiter.api.Assertions;
@@ -9,6 +10,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 class TagServiceTest {
     TagServiceImpl tagService;
@@ -41,5 +43,59 @@ class TagServiceTest {
         Assertions.assertEquals(1, tagEntities.size());
         Assertions.assertEquals(tag.getName(), tagEntities.get(0).getName());
         Assertions.assertEquals(tag.getId(), tagEntities.get(0).getId());
+    }
+
+    @Test
+    void createTagTest() {
+        TagEntityRepository tagRepository = Mockito.mock(TagEntityRepository.class);
+        tagService.setTagRepository(tagRepository);
+
+        TagEntity tag = new TagEntity();
+        int id = 1;
+        String name = "Tag name";
+        tag.setId(id);
+        tag.setName(name);
+
+        Mockito
+                .when(tagRepository.save(tag))
+                .thenReturn(tag);
+
+        TagEntity tagEntity = tagService.createTag(tag);
+
+        Assertions.assertEquals(name, tagEntity.getName());
+        Assertions.assertEquals(id, tagEntity.getId());
+    }
+
+    @Test
+    void findTagByIdTest() {
+        TagEntityRepository tagRepository = Mockito.mock(TagEntityRepository.class);
+        tagService.setTagRepository(tagRepository);
+
+        TagEntity tag = new TagEntity();
+        int id = 1;
+        String name = "Tag name";
+        tag.setId(id);
+        tag.setName(name);
+
+        Mockito
+                .when(tagRepository.findById(id))
+                .thenReturn(Optional.of(tag));
+
+        TagEntity tagEntity = tagService.findTagById(id);
+
+        Assertions.assertEquals(name, tagEntity.getName());
+        Assertions.assertEquals(id, tagEntity.getId());
+    }
+
+    @Test
+    void findTagByWrongTest() {
+        TagEntityRepository tagRepository = Mockito.mock(TagEntityRepository.class);
+        tagService.setTagRepository(tagRepository);
+
+        Mockito
+                .when(tagRepository.findById(0))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThrows(NotFoundException.class, () -> tagService.findTagById(0));
     }
 }

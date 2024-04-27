@@ -1,321 +1,214 @@
 package org.aston.task.servlet;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.aston.task.exceptions.BadRequestException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aston.task.model.RecordEntity;
+import org.aston.task.model.UserEntity;
 import org.aston.task.service.RecordService;
 import org.aston.task.servlet.dto.RecordIncomingDto;
 import org.aston.task.servlet.dto.RecordOutcomingDto;
 import org.aston.task.servlet.mapper.RecordDtoMapper;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@ExtendWith(MockitoExtension.class)
 class RecordServletTest {
+    @Mock
+    private RecordService recordService;
 
-    RecordServlet recordServlet = new RecordServlet();
+    @Mock
+    private RecordDtoMapper recordDtoMapper;
 
-    Gson gson = new Gson();
+    @InjectMocks
+    private RecordServlet recordServlet;
 
-    @Test
-    void doGetRecordByIdTest() throws IOException, ServletException {
-        RecordService recordService = Mockito.mock(RecordService.class);
-        recordServlet.setRecordService(recordService);
+    private final ObjectMapper mapper = new ObjectMapper();
 
-        RecordDtoMapper recordDtoMapper = Mockito.mock(RecordDtoMapper.class);
-        recordServlet.setRecordDtoMapper(recordDtoMapper);
+    private MockMvc mvc;
 
-        RecordEntity recordEntity = new RecordEntity();
-        UUID id = UUID.randomUUID();
-        recordEntity.setId(id);
+    private RecordIncomingDto recordIncomingDto;
 
-        Mockito
-                .when(recordService.findRecordById(id))
-                .thenReturn(recordEntity);
+    private RecordEntity recordEntity;
 
-        RecordOutcomingDto recordOutcomingDto = new RecordOutcomingDto();
-        recordOutcomingDto.setId(id.toString());
+    private RecordOutcomingDto recordOutcomingDto;
 
-        Mockito
-                .when(recordDtoMapper.outComingRecordMap(recordEntity))
-                .thenReturn(recordOutcomingDto);
+    String id;
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
+    String title;
 
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("id=" + id);
+    String text;
 
-        Mockito
-                .when(req.getParameter("id"))
-                .thenReturn(id.toString());
+    String authorId;
 
-        StringWriter out = new StringWriter();
-        PrintWriter writer = new PrintWriter(out);
+    @BeforeEach
+    void beforeEach() {
+        mvc = MockMvcBuilders
+                .standaloneSetup(recordServlet)
+                .build();
 
-        Mockito
-                .when(resp.getWriter())
-                .thenReturn(new PrintWriter(writer));
+        recordIncomingDto = new RecordIncomingDto();
+        recordEntity = new RecordEntity();
+        recordOutcomingDto = new RecordOutcomingDto();
 
-        recordServlet.doGet(req, resp);
+        id = UUID.randomUUID().toString();
+        title = "title";
+        text = "text";
+        authorId = UUID.randomUUID().toString();
 
-        JsonElement jsonUser = gson.toJsonTree(recordOutcomingDto);
-        String userString = gson.toJson(jsonUser);
-
-        Assertions.assertEquals(userString, out.toString());
-    }
-
-    @Test
-    void doGetAllRecordTest() throws IOException, ServletException {
-        RecordService recordService = Mockito.mock(RecordService.class);
-        recordServlet.setRecordService(recordService);
-
-        RecordDtoMapper recordDtoMapper = Mockito.mock(RecordDtoMapper.class);
-        recordServlet.setRecordDtoMapper(recordDtoMapper);
-
-        RecordEntity recordEntity = new RecordEntity();
-        UUID id = UUID.randomUUID();
-        recordEntity.setId(id);
-
-        List<RecordEntity> userEntities = new ArrayList<>();
-        userEntities.add(recordEntity);
-
-        Mockito
-                .when(recordService.findAll())
-                .thenReturn(userEntities);
-
-        RecordOutcomingDto recordOutcomingDto = new RecordOutcomingDto();
-        recordOutcomingDto.setId(id.toString());
-
-        List<RecordOutcomingDto> recordOutcomingDtos = new ArrayList<>();
-        recordOutcomingDtos.add(recordOutcomingDto);
-
-        Mockito
-                .when(recordDtoMapper.outComingRecordMap(recordEntity))
-                .thenReturn(recordOutcomingDto);
-
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn(null);
-
-        StringWriter out = new StringWriter();
-        PrintWriter writer = new PrintWriter(out);
-
-        Mockito
-                .when(resp.getWriter())
-                .thenReturn(new PrintWriter(writer));
-
-        recordServlet.doGet(req, resp);
-
-        JsonElement jsonUser = gson.toJsonTree(recordOutcomingDtos);
-        String userString = gson.toJson(jsonUser);
-
-        Assertions.assertEquals(userString, out.toString());
-    }
-
-    @Test
-    void doPutRecordByIdTest() throws IOException, ServletException {
-        RecordService recordService = Mockito.mock(RecordService.class);
-        recordServlet.setRecordService(recordService);
-
-        RecordDtoMapper recordDtoMapper = Mockito.mock(RecordDtoMapper.class);
-        recordServlet.setRecordDtoMapper(recordDtoMapper);
-
-        RecordEntity recordEntity = new RecordEntity();
-        UUID id = UUID.randomUUID();
-        String text = "text";
-        recordEntity.setId(id);
-        recordEntity.setText(text);
-
-        Mockito
-                .when(recordService.updateRecord(recordEntity, id))
-                .thenReturn(recordEntity);
-
-
-        RecordOutcomingDto recordOutcomingDto = new RecordOutcomingDto();
-        recordOutcomingDto.setId(id.toString());
-        recordOutcomingDto.setText(text);
-
-        Mockito
-                .when(recordDtoMapper.outComingRecordMap(Mockito.any()))
-                .thenReturn(recordOutcomingDto);
-
-        RecordIncomingDto recordIncomingDto = new RecordIncomingDto();
+        recordIncomingDto.setTitle(title);
         recordIncomingDto.setText(text);
+        recordIncomingDto.setTag(new ArrayList<>());
 
-        Mockito
-                .when(recordDtoMapper.incomingRecordMap(recordIncomingDto))
-                .thenReturn(recordEntity);
+        recordEntity.setId(UUID.fromString(id));
+        recordEntity.setTitle(title);
+        recordEntity.setText(text);
+        recordEntity.setAuthor(new UserEntity());
+        recordEntity.setTags(new ArrayList<>());
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("id=" + id);
-
-        Mockito
-                .when(req.getParameter("id"))
-                .thenReturn(id.toString());
-
-        JsonElement jsonIncomingUser = gson.toJsonTree(recordIncomingDto);
-        String userIncomingString = gson.toJson(jsonIncomingUser);
-        Reader inputString = new StringReader(userIncomingString);
-
-        Mockito
-                .when(req.getReader())
-                .thenReturn(new BufferedReader(new BufferedReader(inputString)));
-
-
-        StringWriter out = new StringWriter();
-        PrintWriter writer = new PrintWriter(out);
-
-        Mockito
-                .when(resp.getWriter())
-                .thenReturn(new PrintWriter(writer));
-
-        recordServlet.doPut(req, resp);
-
-        JsonElement jsonUser = gson.toJsonTree(recordOutcomingDto);
-        String userString = gson.toJson(jsonUser);
-
-        Assertions.assertEquals(userString, out.toString());
+        recordOutcomingDto.setId(id);
+        recordOutcomingDto.setTitle(title);
+        recordOutcomingDto.setText(text);
+        recordOutcomingDto.setAuthorId(authorId);
+        recordOutcomingDto.setTag(new ArrayList<>());
     }
 
     @Test
-    void doPostRecordByIdTest() throws IOException, ServletException {
-        RecordService recordService = Mockito.mock(RecordService.class);
-        recordServlet.setRecordService(recordService);
-
-        RecordDtoMapper recordDtoMapper = Mockito.mock(RecordDtoMapper.class);
-        recordServlet.setRecordDtoMapper(recordDtoMapper);
-
-        RecordEntity recordEntity = new RecordEntity();
-        UUID id = UUID.randomUUID();
-        String text = "text";
-        recordEntity.setId(id);
-        recordEntity.setText(text);
-
-        Mockito
-                .when(recordService.updateRecord(recordEntity, id))
+    void createRecordTest() throws Exception {
+        when(recordDtoMapper.incomingRecordMap(any()))
                 .thenReturn(recordEntity);
 
+        when(recordService.createRecord(any(), any(UUID.class)))
+                .thenReturn(recordEntity);
 
-        RecordOutcomingDto recordOutcomingDto = new RecordOutcomingDto();
-        recordOutcomingDto.setId(id.toString());
-        recordOutcomingDto.setText(text);
-
-        Mockito
-                .when(recordDtoMapper.outComingRecordMap(Mockito.any()))
+        when(recordDtoMapper.outComingRecordMap(any()))
                 .thenReturn(recordOutcomingDto);
 
-        RecordIncomingDto recordIncomingDto = new RecordIncomingDto();
-        recordIncomingDto.setText(text);
+        mvc.perform(post("/record?userId=" + authorId)
+                        .content(mapper.writeValueAsString(recordIncomingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(id)))
+                .andExpect(jsonPath("$.title", is(title)))
+                .andExpect(jsonPath("$.text", is(text)))
+                .andExpect(jsonPath("$.authorId", is(authorId)));
+    }
 
-        Mockito
-                .when(recordDtoMapper.incomingRecordMap(recordIncomingDto))
+    @Test
+    void getRecordByIdTest() throws Exception {
+        when(recordService.findRecordById(any(UUID.class)))
                 .thenReturn(recordEntity);
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
+        when(recordDtoMapper.outComingRecordMap(any()))
+                .thenReturn(recordOutcomingDto);
 
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("userId=" + id);
-
-        Mockito
-                .when(req.getParameter("userId"))
-                .thenReturn(id.toString());
-
-        JsonElement jsonIncomingUser = gson.toJsonTree(recordIncomingDto);
-        String userIncomingString = gson.toJson(jsonIncomingUser);
-        Reader inputString = new StringReader(userIncomingString);
-
-        Mockito
-                .when(req.getReader())
-                .thenReturn(new BufferedReader(new BufferedReader(inputString)));
-
-
-        StringWriter out = new StringWriter();
-        PrintWriter writer = new PrintWriter(out);
-
-        Mockito
-                .when(resp.getWriter())
-                .thenReturn(new PrintWriter(writer));
-
-        recordServlet.doPost(req, resp);
-
-        JsonElement jsonUser = gson.toJsonTree(recordOutcomingDto);
-        String userString = gson.toJson(jsonUser);
-
-        Assertions.assertEquals(userString, out.toString());
+        mvc.perform(get("/record/" + id)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(id)))
+                .andExpect(jsonPath("$.title", is(title)))
+                .andExpect(jsonPath("$.text", is(text)))
+                .andExpect(jsonPath("$.authorId", is(authorId)));
     }
 
     @Test
-    void doGetRecordBadRequestTest() {
+    void getRecordByTagIdTest() throws Exception {
+        List<RecordEntity> recordEntities = new ArrayList<>();
+        recordEntities.add(recordEntity);
+        when(recordService.findRecordsByTagId(anyInt()))
+                .thenReturn(recordEntities);
 
+        when(recordDtoMapper.outComingRecordMap(any()))
+                .thenReturn(recordOutcomingDto);
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("not=" + "name");
-
-        Assertions.assertThrows(BadRequestException.class, () -> recordServlet.doGet(req, resp));
+        mvc.perform(get("/record/tag?tagId=" + 1)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(id)))
+                .andExpect(jsonPath("$[0].title", is(title)))
+                .andExpect(jsonPath("$[0].text", is(text)))
+                .andExpect(jsonPath("$[0].authorId", is(authorId)));
     }
 
     @Test
-    void doPutUserBadRequestTest() {
+    void getAllTest() throws Exception {
+        List<RecordEntity> recordEntities = new ArrayList<>();
+        recordEntities.add(recordEntity);
+        when(recordService.findAll())
+                .thenReturn(recordEntities);
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
+        when(recordDtoMapper.outComingRecordMap(any()))
+                .thenReturn(recordOutcomingDto);
 
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("not=" + "name");
-
-        Assertions.assertThrows(BadRequestException.class, () -> recordServlet.doPut(req, resp));
+        mvc.perform(get("/record")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(id)))
+                .andExpect(jsonPath("$[0].title", is(title)))
+                .andExpect(jsonPath("$[0].text", is(text)))
+                .andExpect(jsonPath("$[0].authorId", is(authorId)));
     }
 
     @Test
-    void doDeleteRecordBadRequestTest() {
+    void updateRecordTest() throws Exception {
+        when(recordDtoMapper.incomingRecordMap(any()))
+                .thenReturn(recordEntity);
 
+        when(recordService.updateRecord(any(), any(UUID.class)))
+                .thenReturn(recordEntity);
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
+        when(recordDtoMapper.outComingRecordMap(any()))
+                .thenReturn(recordOutcomingDto);
 
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("not=" + "name");
-
-        Assertions.assertThrows(BadRequestException.class, () -> recordServlet.doDelete(req, resp));
+        mvc.perform(put("/record?id=" + id)
+                        .content(mapper.writeValueAsString(recordIncomingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(id)))
+                .andExpect(jsonPath("$.title", is(title)))
+                .andExpect(jsonPath("$.text", is(text)))
+                .andExpect(jsonPath("$.authorId", is(authorId)));
     }
 
     @Test
-    void doPostRecordBadRequestTest() {
-
-
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
+    void deleteRecordByIdTest() throws Exception {
         Mockito
-                .when(req.getQueryString())
-                .thenReturn("not=" + "name");
+                .doNothing()
+                .when(recordService).deleteRecord(any(UUID.class));
 
-        Assertions.assertThrows(BadRequestException.class, () -> recordServlet.doPost(req, resp));
+        mvc.perform(delete("/record/" + id)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

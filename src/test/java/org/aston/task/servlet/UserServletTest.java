@@ -1,300 +1,170 @@
 package org.aston.task.servlet;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.aston.task.exceptions.BadRequestException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aston.task.model.UserEntity;
 import org.aston.task.service.UserService;
-import org.aston.task.service.impl.UserServiceImpl;
 import org.aston.task.servlet.dto.UserIncomingDto;
 import org.aston.task.servlet.dto.UserOutcomingDto;
 import org.aston.task.servlet.mapper.UserDtoMapper;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@ExtendWith(MockitoExtension.class)
 class UserServletTest {
 
-    UserServlet userServlet = new UserServlet();
+    @Mock
+    private UserService userService;
 
-    Gson gson = new Gson();
+    @Mock
+    private UserDtoMapper userDtoMapper;
 
-    @Test
-    void doGetUserByIdTest() throws IOException, ServletException {
-        UserService userService = Mockito.mock(UserServiceImpl.class);
-        userServlet.setUserService(userService);
+    @InjectMocks
+    private UserServlet userServlet;
 
-        UserDtoMapper userDtoMapper = Mockito.mock(UserDtoMapper.class);
-        userServlet.setUserDtoMapper(userDtoMapper);
+    private final ObjectMapper mapper = new ObjectMapper();
 
-        UserEntity user = new UserEntity();
-        UUID id = UUID.randomUUID();
-        user.setId(id);
+    private MockMvc mvc;
 
-        Mockito
-                .when(userService.findUserById(id))
-                .thenReturn(user);
+    private UserIncomingDto userIncomingDto;
 
-        UserOutcomingDto userOutcomingDto = new UserOutcomingDto();
-        userOutcomingDto.setId(id.toString());
+    private UserOutcomingDto userOutcomingDto;
 
-        Mockito
-                .when(userDtoMapper.outComingUserMap(user))
-                .thenReturn(userOutcomingDto);
+    private UserEntity userEntity;
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
+    private String id;
 
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("id=" + id);
+    private String name;
 
-        Mockito
-                .when(req.getParameter("id"))
-                .thenReturn(id.toString());
+    @BeforeEach
+    void beforeEach() {
+        mvc = MockMvcBuilders
+                .standaloneSetup(userServlet)
+                .build();
 
-        StringWriter out = new StringWriter();
-        PrintWriter writer = new PrintWriter(out);
+        id = UUID.randomUUID().toString();
+        name = "name";
 
-        Mockito
-                .when(resp.getWriter())
-                .thenReturn(new PrintWriter(writer));
+        userIncomingDto = new UserIncomingDto();
+        userEntity = new UserEntity();
+        userOutcomingDto = new UserOutcomingDto();
 
-        userServlet.doGet(req, resp);
-
-        JsonElement jsonUser = gson.toJsonTree(userOutcomingDto);
-        String userString = gson.toJson(jsonUser);
-
-        Assertions.assertEquals(userString, out.toString());
-    }
-
-    @Test
-    void doGetAllUserTest() throws IOException, ServletException {
-        UserService userService = Mockito.mock(UserServiceImpl.class);
-        userServlet.setUserService(userService);
-
-        UserDtoMapper userDtoMapper = Mockito.mock(UserDtoMapper.class);
-        userServlet.setUserDtoMapper(userDtoMapper);
-
-        UserEntity user = new UserEntity();
-        UUID id = UUID.randomUUID();
-        user.setId(id);
-
-        List<UserEntity> userEntities = new ArrayList<>();
-        userEntities.add(user);
-
-        Mockito
-                .when(userService.findAll())
-                .thenReturn(userEntities);
-
-        UserOutcomingDto userOutcomingDto = new UserOutcomingDto();
-        userOutcomingDto.setId(id.toString());
-
-        List<UserOutcomingDto> userOutcomingDtos = new ArrayList<>();
-        userOutcomingDtos.add(userOutcomingDto);
-
-        Mockito
-                .when(userDtoMapper.outComingUserMap(user))
-                .thenReturn(userOutcomingDto);
-
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn(null);
-
-        StringWriter out = new StringWriter();
-        PrintWriter writer = new PrintWriter(out);
-
-        Mockito
-                .when(resp.getWriter())
-                .thenReturn(new PrintWriter(writer));
-
-        userServlet.doGet(req, resp);
-
-        JsonElement jsonUser = gson.toJsonTree(userOutcomingDtos);
-        String userString = gson.toJson(jsonUser);
-
-        Assertions.assertEquals(userString, out.toString());
-    }
-
-    @Test
-    void doPutUserByIdTest() throws IOException, ServletException {
-        UserService userService = Mockito.mock(UserServiceImpl.class);
-        userServlet.setUserService(userService);
-
-        UserDtoMapper userDtoMapper = Mockito.mock(UserDtoMapper.class);
-        userServlet.setUserDtoMapper(userDtoMapper);
-
-        UserEntity user = new UserEntity();
-        UUID id = UUID.randomUUID();
-        String name = "name";
-        user.setId(id);
-        user.setName(name);
-
-        Mockito
-                .when(userService.updateUser(user, id))
-                .thenReturn(user);
-
-        UserOutcomingDto userOutcomingDto = new UserOutcomingDto();
-        userOutcomingDto.setId(id.toString());
-        userOutcomingDto.setName(name);
-
-        Mockito
-                .when(userDtoMapper.outComingUserMap(Mockito.any()))
-                .thenReturn(userOutcomingDto);
-
-        UserIncomingDto userIncomingDto = new UserIncomingDto();
         userIncomingDto.setName(name);
 
-        Mockito
-                .when(userDtoMapper.incomingUserMap(userIncomingDto))
-                .thenReturn(user);
+        userEntity.setName(name);
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("id=" + id);
-
-        Mockito
-                .when(req.getParameter("id"))
-                .thenReturn(id.toString());
-
-        JsonElement jsonIncomingUser = gson.toJsonTree(userIncomingDto);
-        String userIncomingString = gson.toJson(jsonIncomingUser);
-        Reader inputString = new StringReader(userIncomingString);
-
-        Mockito
-                .when(req.getReader())
-                .thenReturn(new BufferedReader(new BufferedReader(inputString)));
-
-
-        StringWriter out = new StringWriter();
-        PrintWriter writer = new PrintWriter(out);
-
-        Mockito
-                .when(resp.getWriter())
-                .thenReturn(new PrintWriter(writer));
-
-        userServlet.doPut(req, resp);
-
-        JsonElement jsonUser = gson.toJsonTree(userOutcomingDto);
-        String userString = gson.toJson(jsonUser);
-
-        Assertions.assertEquals(userString, out.toString());
+        userOutcomingDto.setId(id);
+        userOutcomingDto.setName(name);
+        userOutcomingDto.setRecordsId(new ArrayList<>());
     }
 
     @Test
-    void doPostUserByIdTest() throws IOException, ServletException {
-        UserService userService = Mockito.mock(UserServiceImpl.class);
-        userServlet.setUserService(userService);
+    void saveUserTest() throws Exception {
+        when(userDtoMapper.incomingUserMap(any()))
+                .thenReturn(userEntity);
 
-        UserDtoMapper userDtoMapper = Mockito.mock(UserDtoMapper.class);
-        userServlet.setUserDtoMapper(userDtoMapper);
+        when(userService.createUser(any()))
+                .thenReturn(userEntity);
 
-        UserEntity user = new UserEntity();
-        UUID id = UUID.randomUUID();
-        String name = "name";
-        user.setId(id);
-        user.setName(name);
-
-        Mockito
-                .when(userService.updateUser(user, id))
-                .thenReturn(user);
-
-        UserOutcomingDto userOutcomingDto = new UserOutcomingDto();
-        userOutcomingDto.setId(id.toString());
-        userOutcomingDto.setName(name);
-
-        Mockito
-                .when(userDtoMapper.outComingUserMap(Mockito.any()))
+        when(userDtoMapper.outComingUserMap(any()))
                 .thenReturn(userOutcomingDto);
 
-        UserIncomingDto userIncomingDto = new UserIncomingDto();
-        userIncomingDto.setName(name);
-
-        Mockito
-                .when(userDtoMapper.incomingUserMap(userIncomingDto))
-                .thenReturn(user);
-
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
-        JsonElement jsonIncomingUser = gson.toJsonTree(userIncomingDto);
-        String userIncomingString = gson.toJson(jsonIncomingUser);
-        Reader inputString = new StringReader(userIncomingString);
-
-        Mockito
-                .when(req.getReader())
-                .thenReturn(new BufferedReader(new BufferedReader(inputString)));
-
-
-        StringWriter out = new StringWriter();
-        PrintWriter writer = new PrintWriter(out);
-
-        Mockito
-                .when(resp.getWriter())
-                .thenReturn(new PrintWriter(writer));
-
-        userServlet.doPost(req, resp);
-
-        JsonElement jsonUser = gson.toJsonTree(userOutcomingDto);
-        String userString = gson.toJson(jsonUser);
-
-        Assertions.assertEquals(userString, out.toString());
+        mvc.perform(post("/user")
+                .content(mapper.writeValueAsString(userIncomingDto))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(id)))
+                .andExpect(jsonPath("$.name", is(name)));
     }
 
     @Test
-    void doGetUserBadRequestTest() {
+    void getUserByIdTest() throws Exception {
+        when(userService.findUserById(any()))
+                .thenReturn(userEntity);
 
+        when(userDtoMapper.outComingUserMap(any()))
+                .thenReturn(userOutcomingDto);
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("not=" + "name");
-
-        Assertions.assertThrows(BadRequestException.class, () -> userServlet.doGet(req, resp));
+        mvc.perform(get("/user/" + id)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(id)))
+                .andExpect(jsonPath("$.name", is(name)));
     }
 
     @Test
-    void doPutUserBadRequestTest() {
+    void updateUserByIdTest() throws Exception {
+        when(userDtoMapper.incomingUserMap(any()))
+                .thenReturn(userEntity);
 
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
+        when(userService.updateUser(any(), any(UUID.class)))
+                .thenReturn(userEntity);
 
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("not=" + "name");
+        when(userDtoMapper.outComingUserMap(any()))
+                .thenReturn(userOutcomingDto);
 
-        Assertions.assertThrows(BadRequestException.class, () -> userServlet.doPut(req, resp));
+        mvc.perform(put("/user/" + id)
+                        .content(mapper.writeValueAsString(userIncomingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(id)))
+                .andExpect(jsonPath("$.name", is(name)));
     }
 
     @Test
-    void doDeleteUserBadRequestTest() {
+    void deleteUserByIdTest() throws Exception {
+        doNothing()
+                .when(userService).deleteUser(UUID.fromString(id));
 
-
-        HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse resp = Mockito.mock(HttpServletResponse.class);
-
-        Mockito
-                .when(req.getQueryString())
-                .thenReturn("not=" + "name");
-
-        Assertions.assertThrows(BadRequestException.class, () -> userServlet.doDelete(req, resp));
+        mvc.perform(delete("/user/" + id)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
+    @Test
+    void findAllTest() throws Exception {
+        List<UserEntity> users = new ArrayList<>();
+        users.add(userEntity);
+        when(userService.findAll())
+                .thenReturn(users);
 
+        when(userDtoMapper.outComingUserMap(any()))
+                .thenReturn(userOutcomingDto);
+
+        mvc.perform(get("/user")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(id)))
+                .andExpect(jsonPath("$[0].name", is(name)));
+    }
 }

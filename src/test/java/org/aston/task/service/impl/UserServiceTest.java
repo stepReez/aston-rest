@@ -25,8 +25,10 @@ class UserServiceTest {
     @Test
     void createUserTest() {
         UserEntity userEntity = new UserEntity();
+        UUID uuid = UUID.randomUUID();
         String name = "Name";
 
+        userEntity.setId(uuid);
         userEntity.setName(name);
 
         UserEntityRepository userEntityRepositoryMock = Mockito.mock(UserEntityRepository.class);

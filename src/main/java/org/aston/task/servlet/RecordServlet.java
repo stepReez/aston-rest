@@ -30,14 +30,6 @@ public class RecordServlet {
         this.recordDtoMapper = recordDtoMapper;
     }
 
-    public void setRecordService(RecordService recordService) {
-        this.recordService = recordService;
-    }
-
-    public void setRecordDtoMapper(RecordDtoMapper recordDtoMapper) {
-        this.recordDtoMapper = recordDtoMapper;
-    }
-
     @GetMapping
     public List<RecordOutcomingDto> getAll() {
         List<RecordEntity> recordEntities = recordService.findAll();

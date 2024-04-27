@@ -8,10 +8,6 @@ public class UserIncomingDto {
 
     }
 
-    public UserIncomingDto(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
