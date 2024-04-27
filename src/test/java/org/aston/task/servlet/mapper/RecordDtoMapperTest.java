@@ -3,9 +3,7 @@ package org.aston.task.servlet.mapper;
 import org.aston.task.model.RecordEntity;
 import org.aston.task.model.TagEntity;
 import org.aston.task.model.UserEntity;
-import org.aston.task.servlet.dto.RecordIncomingDto;
-import org.aston.task.servlet.dto.RecordOutcomingDto;
-import org.aston.task.servlet.dto.UserShortDto;
+import org.aston.task.servlet.dto.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,11 +30,16 @@ class RecordDtoMapperTest {
     void recordDtoMapper_incomingRecordMapTest() {
         String title = "Title";
         String text = "text";
+        List<Integer> tags = new ArrayList<>();
+        tags.add(1);
         RecordIncomingDto recordIncomingDto = new RecordIncomingDto(title, text);
+        recordIncomingDto.setTag(tags);
         RecordEntity recordEntity = recordDtoMapper.incomingRecordMap(recordIncomingDto);
 
         Assertions.assertEquals(title, recordEntity.getTitle(), "Title must be equal " + title);
         Assertions.assertEquals(text, recordEntity.getText(), "Text must be equal " + text);
+        Assertions.assertEquals(tags.size(), recordEntity.getTag().size());
+        Assertions.assertEquals(tags.get(0), recordEntity.getTag().get(0).getId());
     }
 
     @Test
@@ -71,5 +74,29 @@ class RecordDtoMapperTest {
         Assertions.assertEquals(title, recordOutcomingDto.getTitle(), "Title must be equal " + title);
         Assertions.assertEquals(text, recordOutcomingDto.getText(), "Text must be equal " + text);
         Assertions.assertEquals(userId1.toString(), recordOutcomingDto.getAuthor().getId(), "Author id must be equal " + userId1);
+    }
+
+    @Test
+    void recordOutcomingDtoMap_nullRecordTest() {
+        RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(null);
+        Assertions.assertNull(recordOutcomingDto);
+    }
+
+    @Test
+    void recordIncomingDtoMap_nullRecordTest() {
+        RecordEntity recordEntity = recordDtoMapper.incomingRecordMap(null);
+        Assertions.assertNull(recordEntity);
+    }
+
+    @Test
+    void recordShortDtoMap_nullTest() {
+        RecordShortDto recordShortDto = recordDtoMapper.shortOutComingMap(null);
+        Assertions.assertNull(recordShortDto);
+    }
+
+    @Test
+    void agEntityListToTagOutcomingDtoListTest() {
+        List<TagOutcomingDto> list = recordDtoMapper.tagEntityListToTagOutcomingDtoList(null);
+        Assertions.assertNull(list);
     }
 }

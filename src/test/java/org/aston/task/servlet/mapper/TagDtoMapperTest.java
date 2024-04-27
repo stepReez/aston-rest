@@ -38,4 +38,18 @@ class TagDtoMapperTest {
         Assertions.assertEquals(id, tagOutcomingDto.getId());
         Assertions.assertEquals(name, tagOutcomingDto.getName());
     }
+
+    @Test
+    void testDtoMapper_OutComingNullMapTest() {
+        TagOutcomingDto tagOutcomingDto = tagDtoMapper.outcomingMap(null);
+
+        Assertions.assertNull(tagOutcomingDto);
+    }
+
+    @Test
+    void testDtoMapper_incomingNullMapTest() {
+        TagEntity tag = tagDtoMapper.incomingMap(null);
+
+        Assertions.assertNull(tag);
+    }
 }

@@ -2,8 +2,10 @@ package org.aston.task.servlet.mapper;
 
 import org.aston.task.model.RecordEntity;
 import org.aston.task.model.UserEntity;
+import org.aston.task.servlet.dto.RecordShortDto;
 import org.aston.task.servlet.dto.UserIncomingDto;
 import org.aston.task.servlet.dto.UserOutcomingDto;
+import org.aston.task.servlet.dto.UserShortDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,5 +62,29 @@ class UserDtoMapperTest {
         Assertions.assertEquals(1, userOutcomingDto.getRecords().size(), "Size must be equal " + 1);
         Assertions.assertEquals(recordId1.toString(), userOutcomingDto.getRecords().get(0).getId(),
                 "Id must bew equal " + recordId1);
+    }
+
+    @Test
+    void userDtoMapper_outComingNullUserMap() {
+        UserOutcomingDto userOutcomingDto = userDtoMapper.outComingUserMap(null);
+        Assertions.assertNull(userOutcomingDto);
+    }
+
+    @Test
+    void userDtoMapper_incomingNullUserMap() {
+        UserEntity user = userDtoMapper.incomingUserMap(null);
+        Assertions.assertNull(user);
+    }
+
+    @Test
+    void userDtoMapper_shortOutComingDtoMapNullTest() {
+        UserShortDto userShortDto = userDtoMapper.shortOutComingDtoMap(null);
+        Assertions.assertNull(userShortDto);
+    }
+
+    @Test
+    void userDtoMapper_recordEntityListToRecordShortDtoListNullTest() {
+        List<RecordShortDto> list = userDtoMapper.recordEntityListToRecordShortDtoList(null);
+        Assertions.assertNull(list);
     }
 }
