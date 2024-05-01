@@ -12,16 +12,10 @@ import java.util.List;
 @Service
 public class TagServiceImpl implements TagService {
 
-    private TagEntityRepository tagEntityRepository;
+    private final TagEntityRepository tagEntityRepository;
 
     @Autowired
     public TagServiceImpl(TagEntityRepository tagEntityRepository) {
-        this.tagEntityRepository = tagEntityRepository;
-    }
-
-    public TagServiceImpl(){}
-
-    public void setTagRepository(TagEntityRepository tagEntityRepository) {
         this.tagEntityRepository = tagEntityRepository;
     }
 

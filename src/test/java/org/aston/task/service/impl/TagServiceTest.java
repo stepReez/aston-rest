@@ -15,16 +15,16 @@ import java.util.Optional;
 class TagServiceTest {
     TagServiceImpl tagService;
 
+    TagEntityRepository tagRepository;
+
     @BeforeEach
     void beforeEach() {
-        tagService = new TagServiceImpl();
+        tagRepository = Mockito.mock(TagEntityRepository.class);
+        tagService = new TagServiceImpl(tagRepository);
     }
 
     @Test
     void getAllTagsTest() {
-        TagEntityRepository tagRepository = Mockito.mock(TagEntityRepository.class);
-        tagService.setTagRepository(tagRepository);
-
         TagEntity tag = new TagEntity();
         int id = 1;
         String name = "Tag name";
@@ -47,9 +47,6 @@ class TagServiceTest {
 
     @Test
     void createTagTest() {
-        TagEntityRepository tagRepository = Mockito.mock(TagEntityRepository.class);
-        tagService.setTagRepository(tagRepository);
-
         TagEntity tag = new TagEntity();
         int id = 1;
         String name = "Tag name";
@@ -68,14 +65,12 @@ class TagServiceTest {
 
     @Test
     void findTagByIdTest() {
-        TagEntityRepository tagRepository = Mockito.mock(TagEntityRepository.class);
-        tagService.setTagRepository(tagRepository);
-
         TagEntity tag = new TagEntity();
         int id = 1;
         String name = "Tag name";
         tag.setId(id);
         tag.setName(name);
+        tag.setRecords(new ArrayList<>());
 
         Mockito
                 .when(tagRepository.findById(id))
@@ -85,17 +80,25 @@ class TagServiceTest {
 
         Assertions.assertEquals(name, tagEntity.getName());
         Assertions.assertEquals(id, tagEntity.getId());
+        Assertions.assertNotNull(tagEntity.getRecords());
     }
 
     @Test
     void findTagByWrongTest() {
-        TagEntityRepository tagRepository = Mockito.mock(TagEntityRepository.class);
-        tagService.setTagRepository(tagRepository);
-
         Mockito
                 .when(tagRepository.findById(0))
                 .thenReturn(Optional.empty());
 
         Assertions.assertThrows(NotFoundException.class, () -> tagService.findTagById(0));
+    }
+
+    @Test
+    void deleteTagByIdTest() {
+        int id = 1;
+
+        tagService.removeTag(id);
+
+        Mockito
+                .verify(tagRepository).deleteById(id);
     }
 }

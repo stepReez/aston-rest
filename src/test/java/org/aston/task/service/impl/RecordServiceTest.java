@@ -19,9 +19,17 @@ class RecordServiceTest {
 
     RecordServiceImpl recordService;
 
+    RecordEntityRepository recordEntityRepository;
+    UserEntityRepository userEntityRepository;
+    TagEntityRepository tagEntityRepository;
+
     @BeforeEach
     public void beforeEach() {
-        recordService = new RecordServiceImpl();
+        recordEntityRepository = Mockito.mock(RecordEntityRepository.class);
+        userEntityRepository = Mockito.mock(UserEntityRepository.class);
+        tagEntityRepository = Mockito.mock(TagEntityRepository.class);
+
+        recordService = new RecordServiceImpl(recordEntityRepository, userEntityRepository, tagEntityRepository);
     }
 
     @Test
@@ -41,15 +49,6 @@ class RecordServiceTest {
 
         userEntity.setId(userId);
         userEntity.setName(name);
-
-        RecordEntityRepository recordEntityRepository = Mockito.mock(RecordEntityRepository.class);
-        recordService.setRecordEntityRepository(recordEntityRepository);
-
-        UserEntityRepository userEntityRepository = Mockito.mock(UserEntityRepository.class);
-        recordService.setUserEntityRepository(userEntityRepository);
-
-        TagEntityRepository tagEntityRepository = Mockito.mock(TagEntityRepository.class);
-        recordService.setTagRepository(tagEntityRepository);
 
         Mockito
                 .when(tagEntityRepository.findByRecordId(Mockito.any()))
@@ -89,15 +88,6 @@ class RecordServiceTest {
 
         recordEntity.setAuthor(userEntity);
 
-        RecordEntityRepository recordEntityRepository = Mockito.mock(RecordEntityRepository.class);
-        recordService.setRecordEntityRepository(recordEntityRepository);
-
-        UserEntityRepository userEntityRepository = Mockito.mock(UserEntityRepository.class);
-        recordService.setUserEntityRepository(userEntityRepository);
-
-        TagEntityRepository tagEntityRepository = Mockito.mock(TagEntityRepository.class);
-        recordService.setTagRepository(tagEntityRepository);
-
         Mockito
                 .when(tagEntityRepository.findByRecordId(Mockito.any()))
                 .thenReturn(new ArrayList<>());
@@ -133,15 +123,6 @@ class RecordServiceTest {
         userEntity.setId(authorId);
 
         recordEntity.setAuthor(userEntity);
-
-        RecordEntityRepository recordEntityRepository = Mockito.mock(RecordEntityRepository.class);
-        recordService.setRecordEntityRepository(recordEntityRepository);
-
-        UserEntityRepository userEntityRepository = Mockito.mock(UserEntityRepository.class);
-        recordService.setUserEntityRepository(userEntityRepository);
-
-        TagEntityRepository tagEntityRepository = Mockito.mock(TagEntityRepository.class);
-        recordService.setTagRepository(tagEntityRepository);
 
         Mockito
                 .when(tagEntityRepository.findByRecordId(Mockito.any()))
@@ -182,15 +163,6 @@ class RecordServiceTest {
             recordEntities.add(recordEntity);
         }
 
-        RecordEntityRepository recordEntityRepository = Mockito.mock(RecordEntityRepository.class);
-        recordService.setRecordEntityRepository(recordEntityRepository);
-
-        UserEntityRepository userEntityRepository = Mockito.mock(UserEntityRepository.class);
-        recordService.setUserEntityRepository(userEntityRepository);
-
-        TagEntityRepository tagEntityRepository = Mockito.mock(TagEntityRepository.class);
-        recordService.setTagRepository(tagEntityRepository);
-
         Mockito
                 .when(tagEntityRepository.findByRecordId(Mockito.any()))
                 .thenReturn(new ArrayList<>());
@@ -227,15 +199,6 @@ class RecordServiceTest {
             recordEntities.add(recordEntity);
         }
 
-        RecordEntityRepository recordEntityRepository = Mockito.mock(RecordEntityRepository.class);
-        recordService.setRecordEntityRepository(recordEntityRepository);
-
-        UserEntityRepository userEntityRepository = Mockito.mock(UserEntityRepository.class);
-        recordService.setUserEntityRepository(userEntityRepository);
-
-        TagEntityRepository tagEntityRepository = Mockito.mock(TagEntityRepository.class);
-        recordService.setTagRepository(tagEntityRepository);
-
         Mockito
                 .when(tagEntityRepository.findByRecordId(Mockito.any()))
                 .thenReturn(new ArrayList<>());
@@ -247,5 +210,15 @@ class RecordServiceTest {
         List<RecordEntity> recordEntityList = recordService.findRecordsByTagId(1);
 
         Assertions.assertEquals(2, recordEntityList.size());
+    }
+
+    @Test
+    void deleteRecordByIdTest() {
+        UUID uuid = UUID.randomUUID();
+
+        recordService.deleteRecord(uuid);
+
+        Mockito
+                .verify(recordEntityRepository).deleteById(uuid);
     }
 }

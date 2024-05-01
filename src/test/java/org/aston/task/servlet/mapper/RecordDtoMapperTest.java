@@ -77,6 +77,22 @@ class RecordDtoMapperTest {
     }
 
     @Test
+    void recordDtoMapper_shortDtoMapTest() {
+        String title = "Title";
+        String text = "text";
+        RecordEntity recordEntity = new RecordEntity();
+        UUID recordId = UUID.randomUUID();
+        recordEntity.setId(recordId);
+        recordEntity.setTitle(title);
+        recordEntity.setText(text);
+
+        RecordShortDto recordShortDto = recordDtoMapper.shortOutComingMap(recordEntity);
+        Assertions.assertEquals(recordId.toString(), recordShortDto.getId(), "Id must be equal " + recordId);
+        Assertions.assertEquals(title, recordShortDto.getTitle(), "Title must be equal " + title);
+        Assertions.assertEquals(text, recordShortDto.getText(), "Text must be equal " + text);
+    }
+
+    @Test
     void recordOutcomingDtoMap_nullRecordTest() {
         RecordOutcomingDto recordOutcomingDto = recordDtoMapper.outComingRecordMap(null);
         Assertions.assertNull(recordOutcomingDto);

@@ -15,23 +15,13 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserEntityRepository userEntityRepository;
+    private final UserEntityRepository userEntityRepository;
 
-    private RecordEntityRepository recordEntityRepository;
+    private final RecordEntityRepository recordEntityRepository;
 
     @Autowired
     public UserServiceImpl(UserEntityRepository userEntityRepository, RecordEntityRepository recordEntityRepository) {
         this.userEntityRepository = userEntityRepository;
-        this.recordEntityRepository = recordEntityRepository;
-    }
-
-    public UserServiceImpl(){}
-
-    public void setUserEntityRepository(UserEntityRepository userEntityRepository) {
-        this.userEntityRepository = userEntityRepository;
-    }
-
-    public void setRecordEntityRepository(RecordEntityRepository recordEntityRepository) {
         this.recordEntityRepository = recordEntityRepository;
     }
 

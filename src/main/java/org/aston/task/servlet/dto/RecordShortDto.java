@@ -1,7 +1,5 @@
 package org.aston.task.servlet.dto;
 
-import java.util.List;
-
 public class RecordShortDto {
     private String id;
 

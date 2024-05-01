@@ -5,6 +5,8 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
 import org.aston.task.servlet.UserServlet;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -17,6 +19,8 @@ public class Main {
         tomcat.getConnector().setPort(PORT);
 
         Context context = tomcat.addContext("", null);
+
+        SessionFactory sf = new Configuration().configure().buildSessionFactory();
 
         AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
         applicationContext.setServletContext(context.getServletContext());

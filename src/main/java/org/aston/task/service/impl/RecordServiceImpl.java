@@ -15,31 +15,17 @@ import java.util.UUID;
 @Service
 public class RecordServiceImpl implements RecordService {
 
-    private RecordEntityRepository recordEntityRepository;
+    private final RecordEntityRepository recordEntityRepository;
 
-    private UserEntityRepository userEntityRepository;
+    private final UserEntityRepository userEntityRepository;
 
-    private TagEntityRepository tagEntityRepository;
+    private final TagEntityRepository tagEntityRepository;
 
     @Autowired
     public RecordServiceImpl(RecordEntityRepository recordEntityRepository, UserEntityRepository userEntityRepository,
                              TagEntityRepository tagEntityRepository) {
         this.recordEntityRepository = recordEntityRepository;
         this.userEntityRepository = userEntityRepository;
-        this.tagEntityRepository = tagEntityRepository;
-    }
-
-    public RecordServiceImpl(){}
-
-    public void setRecordEntityRepository(RecordEntityRepository recordEntityRepository) {
-        this.recordEntityRepository = recordEntityRepository;
-    }
-
-    public void setUserEntityRepository(UserEntityRepository userEntityRepository) {
-        this.userEntityRepository = userEntityRepository;
-    }
-
-    public void setTagRepository(TagEntityRepository tagEntityRepository) {
         this.tagEntityRepository = tagEntityRepository;
     }
 

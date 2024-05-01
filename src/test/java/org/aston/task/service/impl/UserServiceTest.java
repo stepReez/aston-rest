@@ -17,9 +17,14 @@ import java.util.UUID;
 class UserServiceTest {
     UserServiceImpl userService;
 
+    UserEntityRepository userEntityRepositoryMock;
+    RecordEntityRepository recordEntityRepositoryMock;
+
     @BeforeEach
     public void beforeEach() {
-        userService = new UserServiceImpl();
+        userEntityRepositoryMock = Mockito.mock(UserEntityRepository.class);
+        recordEntityRepositoryMock = Mockito.mock(RecordEntityRepository.class);
+        userService = new UserServiceImpl(userEntityRepositoryMock, recordEntityRepositoryMock);
     }
 
     @Test
@@ -28,9 +33,6 @@ class UserServiceTest {
         String name = "Name";
 
         userEntity.setName(name);
-
-        UserEntityRepository userEntityRepositoryMock = Mockito.mock(UserEntityRepository.class);
-        userService.setUserEntityRepository(userEntityRepositoryMock);
 
         Mockito
                 .when(userEntityRepositoryMock.save(userEntity))
@@ -44,12 +46,6 @@ class UserServiceTest {
 
     @Test
     void findUserByIdTest() {
-        UserEntityRepository userEntityRepositoryMock = Mockito.mock(UserEntityRepository.class);
-        userService.setUserEntityRepository(userEntityRepositoryMock);
-
-        RecordEntityRepository recordEntityRepositoryMock = Mockito.mock(RecordEntityRepository.class);
-        userService.setRecordEntityRepository(recordEntityRepositoryMock);
-
         UserEntity userEntity = new UserEntity();
         UUID id = UUID.randomUUID();
         String name = "Name";
@@ -74,12 +70,6 @@ class UserServiceTest {
 
     @Test
     void updateUserTest() {
-        UserEntityRepository userEntityRepositoryMock = Mockito.mock(UserEntityRepository.class);
-        userService.setUserEntityRepository(userEntityRepositoryMock);
-
-        RecordEntityRepository recordEntityRepositoryMock = Mockito.mock(RecordEntityRepository.class);
-        userService.setRecordEntityRepository(recordEntityRepositoryMock);
-
         UserEntity userEntity = new UserEntity();
         UUID id = UUID.randomUUID();
         String name = "Name";
@@ -104,12 +94,6 @@ class UserServiceTest {
 
     @Test
     void findAllTest() {
-        UserEntityRepository userEntityRepositoryMock = Mockito.mock(UserEntityRepository.class);
-        userService.setUserEntityRepository(userEntityRepositoryMock);
-
-        RecordEntityRepository recordEntityRepositoryMock = Mockito.mock(RecordEntityRepository.class);
-        userService.setRecordEntityRepository(recordEntityRepositoryMock);
-
         UserEntity userEntity1 = new UserEntity();
         UUID id1 = UUID.randomUUID();
         String name1 = "Name1";
@@ -144,5 +128,15 @@ class UserServiceTest {
         Assertions.assertEquals(id2, userEntityList.get(1).getId(), "Id must be equal " + id2);
         Assertions.assertNotNull(userEntityList.get(0).getRecords());
         Assertions.assertNotNull(userEntityList.get(1).getRecords());
+    }
+
+    @Test
+    void deleteRecordByIdTest() {
+        UUID uuid = UUID.randomUUID();
+
+        userService.deleteUser(uuid);
+
+        Mockito
+                .verify(userEntityRepositoryMock).deleteById(uuid);
     }
 }
