@@ -9,11 +9,9 @@ public class RecordOutcomingDto {
 
     private String text;
 
-    private RecordLikesDto likes;
+    private UserShortDto author;
 
-    private String authorId;
-
-    private List<String> tag;
+    private List<TagOutcomingDto> tag;
 
     public RecordOutcomingDto() {
 
@@ -43,27 +41,19 @@ public class RecordOutcomingDto {
         this.text = text;
     }
 
-    public RecordLikesDto getLikes() {
-        return likes;
+    public UserShortDto getAuthor() {
+        return author;
     }
 
-    public void setLikes(RecordLikesDto likes) {
-        this.likes = likes;
+    public void setAuthor(UserShortDto author) {
+        this.author = author;
     }
 
-    public String getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
-    }
-
-    public List<String> getTag() {
+    public List<TagOutcomingDto> getTag() {
         return tag;
     }
 
-    public void setTag(List<String> tag) {
+    public void setTag(List<TagOutcomingDto> tag) {
         this.tag = tag;
     }
 }

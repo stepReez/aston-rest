@@ -1,19 +1,33 @@
 package org.aston.task.model;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+
+import java.sql.Types;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "records")
 public class RecordEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @JdbcTypeCode(Types.VARCHAR)
+    @Column(name = "record_id")
     private UUID id;
 
     private String title;
 
     private String text;
 
-    private RecordLikes likes;
-
+    @ManyToOne
+    @JoinColumn(name = "author_id")
     private UserEntity author;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tags_records",
+    joinColumns = {@JoinColumn(name = "record_id", referencedColumnName = "record_id")},
+    inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "tag_id")})
     private List<TagEntity> tag;
 
     public UUID getId() {
@@ -38,14 +52,6 @@ public class RecordEntity {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public RecordLikes getLikes() {
-        return likes;
-    }
-
-    public void setLikes(RecordLikes likes) {
-        this.likes = likes;
     }
 
     public UserEntity getAuthor() {

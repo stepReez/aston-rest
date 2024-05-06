@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface TagService {
 
-    void createTag(TagEntity tag);
+    TagEntity createTag(TagEntity tag);
+
+    TagEntity findTagById(int id);
 
     void removeTag(int id);
 

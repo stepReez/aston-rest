@@ -8,19 +8,10 @@ public class UserOutcomingDto {
 
     private String name;
 
-    private List<String> recordsId;
-
-    private UserLikesDto likes;
+    private List<RecordShortDto> records;
 
     public UserOutcomingDto() {
 
-    }
-
-    public UserOutcomingDto(String id, String name, List<String> recordsId, UserLikesDto likes) {
-        this.id = id;
-        this.name = name;
-        this.recordsId = recordsId;
-        this.likes = likes;
     }
 
     public String getId() {
@@ -39,19 +30,11 @@ public class UserOutcomingDto {
         this.name = name;
     }
 
-    public List<String> getRecordsId() {
-        return recordsId;
+    public List<RecordShortDto> getRecords() {
+        return records;
     }
 
-    public void setRecordsId(List<String> recordsId) {
-        this.recordsId = recordsId;
-    }
-
-    public UserLikesDto getLikes() {
-        return likes;
-    }
-
-    public void setLikes(UserLikesDto likes) {
-        this.likes = likes;
+    public void setRecords(List<RecordShortDto> records) {
+        this.records = records;
     }
 }

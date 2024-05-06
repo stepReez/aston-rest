@@ -4,7 +4,6 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./src/main/resources/db/schema.sql/:/docker-entrypoint-initdb.d/schema.sql
       - /var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=aston
@@ -13,10 +12,15 @@ services:
 
 
   service:
-    image: tomcat
+    image: service
+    build: .
     ports:
       - "8080:8080"
-    volumes:
-      - ./target:/usr/local/tomcat/webapps
     depends_on:
       - db
+    environment:
+      - DB_NAME=aston
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - DB_HOST=db
+      - DB_PORT=5432

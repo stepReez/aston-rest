@@ -3,12 +3,11 @@ package org.aston.task.servlet.mapper;
 import org.aston.task.model.TagEntity;
 import org.aston.task.servlet.dto.TagInomingDto;
 import org.aston.task.servlet.dto.TagOutcomingDto;
-import org.aston.task.servlet.mapper.impl.TagDtoMapperImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class TagDtoMapperTest {
+class TagDtoMapperTest {
     TagDtoMapper tagDtoMapper;
 
     @BeforeEach
@@ -38,5 +37,19 @@ public class TagDtoMapperTest {
 
         Assertions.assertEquals(id, tagOutcomingDto.getId());
         Assertions.assertEquals(name, tagOutcomingDto.getName());
+    }
+
+    @Test
+    void testDtoMapper_OutComingNullMapTest() {
+        TagOutcomingDto tagOutcomingDto = tagDtoMapper.outcomingMap(null);
+
+        Assertions.assertNull(tagOutcomingDto);
+    }
+
+    @Test
+    void testDtoMapper_incomingNullMapTest() {
+        TagEntity tag = tagDtoMapper.incomingMap(null);
+
+        Assertions.assertNull(tag);
     }
 }
